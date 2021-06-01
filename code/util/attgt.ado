@@ -1,5 +1,5 @@
 program attgt, eclass
-	syntax varlist [if] [in], treatment(varname) [aggregate(string)] [absorb(varlist)] [pre(integer 2)] [post(integer 2)] [reps(int 199)] [notyet] [debug] [cluster(varname)]
+	syntax varlist [if] [in], treatment(varname) [aggregate(string)] [within(varlist)] [pre(integer 2)] [post(integer 2)] [reps(int 199)] [notyet] [debug] [cluster(varname)]
 	marksample touse
 	** First determine outcome and xvars
 	gettoken y xvar:varlist	
@@ -36,13 +36,19 @@ program attgt, eclass
 		local cluster `i'
 	}
 
-	tempvar group _alty_ _y_ flip
+	tempvar group _alty_ _y_ flip mean
 	tempname b V v att co tr _tr_
 	quietly egen `group' = min(cond(`treatment', `time'-1, .)) if `touse', by(`i')
 	quietly summarize `time' if `touse'
 	local min_time = r(min)
 	local max_time = r(max)
-	
+
+	if ("`within'" != "") {
+		tempvar n_treated n_control tr2 ct2
+		quietly generate `tr2' = .
+		quietly generate `ct2' = .
+	}
+
 	* estimate ATT(g,t) as eq 2.6 in https://pedrohcgs.github.io/files/Callaway_SantAnna_2020.pdf
 	quietly levelsof `group' if `touse' & `group' > `min_time', local(gs)
 	quietly levelsof `time' if `touse', local(ts)
@@ -68,12 +74,26 @@ program attgt, eclass
 				* QUESTION: > or >=
 				local control (missing(`group') | (`group' > max(`g', `t'))) & (`timing')
 			}
-			quietly count if `treated' & `touse'
-			local n_treated = r(N)/2
-			quietly count if `control' & `touse'
-			local n_control = r(N)/2
-			local n_`g'_`t' = `n_treated'
 
+			if ("`within'" == "") {
+				quietly count if `treated' & `touse'
+				local n_treated = r(N)/2
+				quietly count if `control' & `touse'
+				local n_control = r(N)/2
+				local n_`g'_`t' = `n_treated'
+			}
+			else {
+				tempvar n_`g'_`t'
+				quietly replace `tr2' = (`treated') if (`touse')
+				quietly replace `ct2' = (`control') if (`touse')
+				capture drop `n_treated' `n_control'
+				quietly egen `n_treated' = sum(`tr2'/2) if `touse', by(`within')	
+				quietly egen `n_control' = sum(`ct2'/2) if `touse', by(`within')
+				* only use treatead/control groups where the other is non-empty
+				quietly replace `n_treated' = 0 if `n_control' == 0 & `touse'
+				quietly replace `n_control' = 0 if `n_treated' == 0 & `touse'
+				quietly generate `n_`g'_`t'' = `n_treated' if `touse'			
+			}
 			tempvar treated_`g'_`t' control_`g'_`t'
 			quietly generate `treated_`g'_`t'' = cond(`time'==`t', +1/`n_treated', -1/`n_treated') if `treated' & `touse'
 			quietly generate `control_`g'_`t'' = cond(`time'==`t', +1/`n_control', -1/`n_control') if `control' & `touse'
@@ -82,9 +102,10 @@ program attgt, eclass
 	}
 
 	if ("`aggregate'"=="e") {
-		tempname n_e
+		tempvar n_e
+		quietly generate `n_e' = 0
 		forvalues e = `pre'(-1)1 {
-			scalar `n_e' = 0
+			quietly replace `n_e' = 0
 			tempvar event_m`e' wce_m`e'
 			quietly generate `event_m`e'' = 0
 			quietly generate `wce_m`e'' = 0
@@ -93,16 +114,16 @@ program attgt, eclass
 				if (`t' >= `min_time') {
 					quietly replace `event_m`e'' = `event_m`e'' + `n_`g'_`t''*`treated_`g'_`t'' if !missing(`treated_`g'_`t'') & `touse'
 					quietly replace `wce_m`e'' = `wce_m`e'' + `n_`g'_`t''*`control_`g'_`t'' if !missing(`control_`g'_`t'') & `touse'
-					scalar `n_e' = `n_e' + `n_`g'_`t''
+					quietly replace `n_e' = `n_e' + `n_`g'_`t'' if `touse'
 				}
 			}
-			quietly replace `event_m`e'' = `event_m`e'' / `n_e' 
-			quietly replace `wce_m`e'' = `wce_m`e'' / `n_e' 
+			quietly replace `event_m`e'' = `event_m`e'' / `n_e' if `touse' 
+			quietly replace `wce_m`e'' = `wce_m`e'' / `n_e' if `touse'
 			local tweights `tweights' event_m`e'
 			local cweights `cweights' wce_m`e'
 		}
 		forvalues e = 1/`post' {
-			scalar `n_e' = 0
+			quietly replace `n_e' = 0
 			tempvar event_`e' wce_`e'
 			quietly generate `event_`e'' = 0
 			quietly generate `wce_`e'' = 0
@@ -111,11 +132,11 @@ program attgt, eclass
 				if (`t' <= `max_time') {
 					quietly replace `event_`e'' = `event_`e'' + `n_`g'_`t''*`treated_`g'_`t'' if !missing(`treated_`g'_`t'') & `touse'
 					quietly replace `wce_`e'' = `wce_`e'' + `n_`g'_`t''*`control_`g'_`t'' if !missing(`control_`g'_`t'') & `touse'
-					scalar `n_e' = `n_e' + `n_`g'_`t''
+					quietly replace `n_e' = `n_e' + `n_`g'_`t'' if `touse'
 				}
 			}
-			quietly replace `event_`e'' = `event_`e'' / `n_e' 
-			quietly replace `wce_`e'' = `wce_`e'' / `n_e' 
+			quietly replace `event_`e'' = `event_`e'' / `n_e' if `touse' 
+			quietly replace `wce_`e'' = `wce_`e'' / `n_e' if `touse' 
 			local tweights `tweights' event_`e'
 			local cweights `cweights' wce_`e'
 		}
@@ -161,15 +182,12 @@ program attgt, eclass
 	}
 	matrix `V' = diag(`V')
 	matrix colname `b' = `colname'
-	*matrix coleq   `b' = `eqname'
 	matrix colname `V' = `colname'
-	*matrix coleq   `v' = `eqname'
 	matrix rowname `V' = `colname'
-	*matrix roweq   `v' = `eqname'
 
 	ereturn post `b' `V'
-	ereturn local cmd csadid
-	ereturn local cmdline csadid `0'
+	ereturn local cmd attgt
+	ereturn local cmdline attgt `0'
 	display "Callaway Sant'Anna (2021)"
 	ereturn display
 
