@@ -71,7 +71,7 @@ $$
 # Discussion 
 
 ## Effects are large
-### Relative to fixed-cost estimates in Halpern, Koren and Szeidl (2015)
+### Fixed-cost estimates in Halpern, Koren and Szeidl (2015)
 Equivalent to \$12-14,000 drop in fixed costs ''per year''.
 
 \begin{tabular}{l|cc}
