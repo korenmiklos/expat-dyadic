@@ -1,7 +1,7 @@
 here
 local here = r(here)
-local countries DE AT CH NL FR GB IT US BE CZ DK ES FI IL PL RO RU SE SK UA BG GR HR SI 
-local languages de fr nl en it sk sv es fi he pl ro ru el sr 
+local countries DE IT
+local languages de it
 char _dta[countries] `countries'
 char _dta[languages] `languages'
 

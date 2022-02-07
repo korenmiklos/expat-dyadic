@@ -1,6 +1,6 @@
 clear all
 
-local countries DE AT CH NL FR GB IT US BE CZ DK ES FI IL PL RO RU SE SK UA BG GR HR SI 
+local countries DE IT
 local variables export export_rauch export_nonrauch export_consumer import import_rauch import_nonrauch import_consumer import_capital import_material
 
 * find root folder

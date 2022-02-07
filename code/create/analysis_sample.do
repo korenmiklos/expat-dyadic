@@ -53,6 +53,7 @@ keep frame_id_numeric year export?? export_rauch?? export_nonrauch?? export_cons
 * only reshape trade so that we can compute distance measures between where owners are from and where this firm is trading
 reshape long export export_rauch export_nonrauch export_consumer import import_rauch import_nonrauch import_consumer import_capital import_material, i(frame_id_numeric year) j(country) string
 local vars distance contig comlang
+drop if country=="XX"
 levelsof country
 local countries = r(levels)
 foreach role in owner manager language {
