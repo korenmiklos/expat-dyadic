@@ -2,11 +2,6 @@
     "freeze_name": "expat-analysis", 
     "freeze_time": "20181109T100009036204+0100", 
     "inputs": {
-        "WMS-Hungary-2018": {
-            "content_id": "0fd24e1dfbfb1be12f426c950f196ce3eae4ac2968670f73b1a807831ede40864bcfcde197079d2a4a8d4f4a9ee4caf50a84f2c04f3e5d7fd67a9ed4330877c8", 
-            "freeze_time": "20200505T221635610430+0200", 
-            "kind": "c2275dbd7511cfab8db77cb2db94365d-7e36d060-db3d-4598-956b-a4f24425aa4d"
-        }, 
         "ceo-panel": {
             "content_id": "4cdf9e40379ab92d3538a4ea24fc0073793ebd4beeb5b19d78adbf9e90c3594abf2c9c9c91235e911a096c61ab76b49cb71e7e97faa20182f8f83b6231c65099", 
             "freeze_time": "20210215T095258296032+0100", 
