@@ -4,22 +4,23 @@ local here = r(here)
 
 do "`here'/code/estimate/header.do"
 drop if country == "XX"
+generate byte trade = export | import
 
-local Y1 export
-local Y2 import
-local Y3 `Y1'
-local Y4 `Y2'
-local X1 Lowner Lmanager
-local X2 `X1'
-local X3 Lonly_owner Lonly_manager Lboth
-local X4 `X3'
+* only use firms that will be taken over
+foreach X of varlist trade either {
+	egen ever_`X' = max(`X'), by(frame_id_numeric)
+	egen min_`X' = min(cond(`X', year, .)), by(frame_id_numeric)
+}
+keep if ever_either | ever_trade
+
+egen firm_market = group(frame_id_numeric country)
+xtset firm_market year
 
 local fmode replace
-forvalues i = 1/4 {
-	* hazard of entering this market
-	reghdfe `Y`i'' `X`i'', a($dummies) cluster(frame_id_numeric)
-	summarize `Y`i'' if e(sample), meanonly
-	outreg2 using "`here'/output/table/trade.tex", `fmode' $options ctitle(`Y`i'')
-	local fmode append
-}
+attgt export import, treatment(either) aggregate(e) pre(3) post(5) notyet limitcontrol(year < min_either)
+summarize export if e(sample), meanonly
+outreg2 using "`here'/output/table/trade.tex", `fmode' $options ctitle(`title`sample'')
 
+local fmode append
+attgt owner manager, treatment(trade) aggregate(e) pre(3) post(5) notyet limitcontrol(year < min_trade)
+outreg2 using "`here'/output/table/trade.tex", `fmode' $options ctitle(`title`sample'')

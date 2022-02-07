@@ -1,16 +1,22 @@
-		(1)	(2)	(3)	(4)
-VARIABLES	LABELS	export	import	export	import
-					
-Lonly_owner	Only owner			0.016	-0.062***
-				(0.014)	(0.015)
-Lonly_manager	Only manager			0.031	-0.044*
-				(0.024)	(0.027)
-Lboth	Both			0.021	-0.094***
-				(0.015)	(0.016)
-Lowner	Owner	0.021	-0.048***		
-		(0.013)	(0.014)		
-Lmanager	Manager	0.022	-0.062***		
-		(0.016)	(0.019)		
-					
-Observations		260,626	260,626	260,626	260,626
-Mean outcome		0.0970	0.182	0.0970	0.182
+		(1)	(2)
+VARIABLES	LABELS	export	import
+			
+event_m3		-0.016	-0.037
+		(0.033)	(0.031)
+event_m2		-0.050	-0.080***
+		(0.030)	(0.029)
+event_m1		-0.065***	-0.041*
+		(0.021)	(0.022)
+event_1		0.034*	0.047**
+		(0.020)	(0.024)
+event_2		0.013	0.041*
+		(0.023)	(0.025)
+event_3		0.034	-0.010
+		(0.026)	(0.027)
+event_4		0.032	0.038
+		(0.028)	(0.028)
+event_5		0.015	0.020
+		(0.032)	(0.037)
+			
+Observations		113,568	113,568
+Mean outcome		0.168	0.168
