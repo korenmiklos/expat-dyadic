@@ -3061,3 +3061,457 @@ Callaway Sant'Anna (2021)
      event_5 |   .0302095    .033302     0.91   0.364    -.0350611    .0954802
 ------------------------------------------------------------------------------
 ```
+
+# 2021-06-04
+## Implement att
+```
+. attgt lnQL if inrange(year, 1992, 2004) & ever_foreign, treatment(has_expat_ceo ) aggregate(att)
+       panel variable:  frame_id_numeric (unbalanced)
+        time variable:  year, 1988 to 2018, but with gaps
+                delta:  1 unit
+Generating weights...
+Estimating att
+Callaway Sant'Anna (2021)
+------------------------------------------------------------------------------
+             |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+lnQL         |
+         att |   .2270268    .047694     4.76   0.000     .1335483    .3205053
+------------------------------------------------------------------------------
+
+. attgt lnQL if inrange(year, 1992, 2004) & ever_foreign, treatment(foreign ) aggregate(att) reps(50)
+       panel variable:  frame_id_numeric (unbalanced)
+        time variable:  year, 1988 to 2018, but with gaps
+                delta:  1 unit
+Generating weights...
+Estimating att
+Callaway Sant'Anna (2021)
+------------------------------------------------------------------------------
+             |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+lnQL         |
+         att |   .1448863   .0242845     5.97   0.000     .0972896     .192483
+------------------------------------------------------------------------------
+
+. attgt lnQL if inrange(year, 1992, 2004) & ever_foreign, treatment(foreign_hire ) aggregate(att) reps(50)
+       panel variable:  frame_id_numeric (unbalanced)
+        time variable:  year, 1988 to 2018, but with gaps
+                delta:  1 unit
+Generating weights...
+Estimating att
+Callaway Sant'Anna (2021)
+------------------------------------------------------------------------------
+             |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+lnQL         |
+         att |   .1574648   .0354046     4.45   0.000     .0880732    .2268565
+------------------------------------------------------------------------------
+
+. attgt lnQL if inrange(year, 1992, 2004) & ever_foreign, treatment(has_expat_ceo ) aggregate(e) pre(3) post(6) r
+> eps(50)
+       panel variable:  frame_id_numeric (unbalanced)
+        time variable:  year, 1988 to 2018, but with gaps
+                delta:  1 unit
+Generating weights...
+Estimating event_m3
+Estimating event_m2
+Estimating event_m1
+Estimating event_1
+Estimating event_2
+Estimating event_3
+Estimating event_4
+Estimating event_5
+Estimating event_6
+Callaway Sant'Anna (2021)
+------------------------------------------------------------------------------
+             |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+lnQL         |
+    event_m3 |   .0439256   .0559961     0.78   0.433    -.0658248     .153676
+    event_m2 |   .0567715    .039594     1.43   0.152    -.0208313    .1343743
+    event_m1 |  -.0016242   .0269028    -0.06   0.952    -.0543528    .0511043
+     event_1 |   .1157186     .04367     2.65   0.008     .0301269    .2013103
+     event_2 |   .2348289   .0583469     4.02   0.000      .120471    .3491868
+     event_3 |    .291681   .0688352     4.24   0.000     .1567664    .4265956
+     event_4 |   .3455067   .0735155     4.70   0.000      .201419    .4895943
+     event_5 |   .4164837   .0911845     4.57   0.000     .2377653     .595202
+     event_6 |   .4113804   .1114671     3.69   0.000     .1929089    .6298518
+------------------------------------------------------------------------------
+
+```
+
+## Test loop over several variables
+Gives the same result with one variable
+```
+. attgt lnQL if inrange(year, 1992, 2004) & ever_foreign, treatment(has_expat_ceo ) aggregate(e) pre(2) post(3) r
+> eps(20)
+       panel variable:  frame_id_numeric (unbalanced)
+        time variable:  year, 1988 to 2018, but with gaps
+                delta:  1 unit
+Generating weights...
+Estimating event_m2
+Estimating event_m1
+Estimating event_1
+Estimating event_2
+Estimating event_3
+Callaway Sant'Anna (2021)
+------------------------------------------------------------------------------
+             |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+lnQL         |
+    event_m2 |   .0567715   .0431826     1.31   0.189    -.0278649    .1414079
+    event_m1 |  -.0016242    .024751    -0.07   0.948    -.0501352    .0468868
+     event_1 |   .1157186    .036145     3.20   0.001     .0448756    .1865616
+     event_2 |   .2348289   .0513223     4.58   0.000     .1342391    .3354188
+     event_3 |    .291681   .0735978     3.96   0.000      .147432      .43593
+------------------------------------------------------------------------------
+
+. attgt lnQL exporter if inrange(year, 1992, 2004) & ever_foreign, treatment(has_expat_ceo ) aggregate(e) pre(2) 
+> post(3) reps(20)
+       panel variable:  frame_id_numeric (unbalanced)
+        time variable:  year, 1988 to 2018, but with gaps
+                delta:  1 unit
+Generating weights...
+Estimating lnQL: event_m2
+Estimating lnQL: event_m1
+Estimating lnQL: event_1
+Estimating lnQL: event_2
+Estimating lnQL: event_3
+Estimating exporter: event_m2
+Estimating exporter: event_m1
+Estimating exporter: event_1
+Estimating exporter: event_2
+Estimating exporter: event_3
+Callaway Sant'Anna (2021)
+------------------------------------------------------------------------------
+             |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+lnQL         |
+    event_m2 |   .0567715   .0431826     1.31   0.189    -.0278649    .1414079
+    event_m1 |  -.0016242    .024751    -0.07   0.948    -.0501352    .0468868
+     event_1 |   .1157186    .036145     3.20   0.001     .0448756    .1865616
+     event_2 |   .2348289   .0513223     4.58   0.000     .1342391    .3354188
+     event_3 |    .291681   .0735978     3.96   0.000      .147432      .43593
+-------------+----------------------------------------------------------------
+exporter     |
+    event_m2 |  -.0140938   .0325203    -0.43   0.665    -.0778323    .0496448
+    event_m1 |  -.0322272    .018028    -1.79   0.074    -.0675615    .0031071
+     event_1 |   .0405351   .0205509     1.97   0.049      .000256    .0808142
+     event_2 |   .0739714   .0277126     2.67   0.008     .0196558     .128287
+     event_3 |   .0738011   .0212182     3.48   0.001     .0322141    .1153881
+------------------------------------------------------------------------------
+```
+
+Test that order does not matter
+```
+. attgt exporter lnQL if inrange(year, 1992, 2004) & ever_foreign, treatment(has_expat_ceo ) aggregate(e) pre(2) 
+> post(3) reps(20)
+       panel variable:  frame_id_numeric (unbalanced)
+        time variable:  year, 1988 to 2018, but with gaps
+                delta:  1 unit
+Generating weights...
+Estimating exporter: event_m2
+Estimating exporter: event_m1
+Estimating exporter: event_1
+Estimating exporter: event_2
+Estimating exporter: event_3
+Estimating lnQL: event_m2
+Estimating lnQL: event_m1
+Estimating lnQL: event_1
+Estimating lnQL: event_2
+Estimating lnQL: event_3
+Callaway Sant'Anna (2021)
+------------------------------------------------------------------------------
+             |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+exporter     |
+    event_m2 |  -.0140938   .0325203    -0.43   0.665    -.0778323    .0496448
+    event_m1 |  -.0322272    .018028    -1.79   0.074    -.0675615    .0031071
+     event_1 |   .0405351   .0205509     1.97   0.049      .000256    .0808142
+     event_2 |   .0739714   .0277126     2.67   0.008     .0196558     .128287
+     event_3 |   .0738011   .0212182     3.48   0.001     .0322141    .1153881
+-------------+----------------------------------------------------------------
+lnQL         |
+    event_m2 |   .0567715   .0431826     1.31   0.189    -.0278649    .1414079
+    event_m1 |  -.0016242    .024751    -0.07   0.948    -.0501352    .0468868
+     event_1 |   .1157186    .036145     3.20   0.001     .0448756    .1865616
+     event_2 |   .2348289   .0513223     4.58   0.000     .1342391    .3354188
+     event_3 |    .291681   .0735978     3.96   0.000      .147432      .43593
+------------------------------------------------------------------------------
+```
+
+# 2021-06-25
+## Implement limitcontrol
+```
+. attgt export if ever_foreign & year<=1996, treatment(manager) aggregate(e) pre(2) post(2) reps(20)
+       panel variable:  frame_id_numeric (unbalanced)
+        time variable:  year, 1992 to 2003, but with gaps
+                delta:  1 unit
+Generating weights...
+Estimating export: event_m2
+Estimating export: event_m1
+Estimating export: event_1
+Estimating export: event_2
+Callaway Sant'Anna (2021)
+
+                                                Number of obs     =      8,124
+
+------------------------------------------------------------------------------
+             |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    event_m2 |   -.133692   .0464961    -2.88   0.004    -.2248226   -.0425614
+    event_m1 |  -.1170807   .0560185    -2.09   0.037     -.226875   -.0072864
+     event_1 |   -.018152   .0441675    -0.41   0.681    -.1047187    .0684147
+     event_2 |  -.0228106     .07117    -0.32   0.749    -.1623013    .1166801
+------------------------------------------------------------------------------
+
+. attgt export if ever_foreign & year<=1996, treatment(manager) aggregate(e) pre(2) post(2) reps(20) limitcontrol(foreign)
+       panel variable:  frame_id_numeric (unbalanced)
+        time variable:  year, 1992 to 2003, but with gaps
+                delta:  1 unit
+Generating weights...
+Estimating export: event_m2
+Estimating export: event_m1
+Estimating export: event_1
+Estimating export: event_2
+Callaway Sant'Anna (2021)
+
+                                                Number of obs     =      5,645
+
+------------------------------------------------------------------------------
+             |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    event_m2 |  -.0892966   .0493026    -1.81   0.070     -.185928    .0073347
+    event_m1 |  -.0949261   .0479608    -1.98   0.048    -.1889276   -.0009246
+     event_1 |  -.0347656   .0396547    -0.88   0.381    -.1124874    .0429561
+     event_2 |  -.0512843   .0721615    -0.71   0.477    -.1927183    .0901497
+------------------------------------------------------------------------------
+
+. attgt export if ever_foreign & year<=1996, treatment(manager) aggregate(e) pre(2) post(2) reps(20) limitcontrol(foreign==1 & L.foreign==1)
+       panel variable:  frame_id_numeric (unbalanced)
+        time variable:  year, 1992 to 2003, but with gaps
+                delta:  1 unit
+Generating weights...
+Estimating export: event_m2
+Estimating export: event_m1
+Estimating export: event_1
+Estimating export: event_2
+Callaway Sant'Anna (2021)
+
+                                                Number of obs     =      4,067
+
+------------------------------------------------------------------------------
+             |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    event_m2 |   .2923452   .0664321     4.40   0.000     .1621407    .4225497
+    event_m1 |   .0801804   .0495601     1.62   0.106    -.0169555    .1773164
+     event_1 |  -.0833115   .0397688    -2.09   0.036    -.1612568   -.0053661
+     event_2 |  -.1041501   .0720074    -1.45   0.148    -.2452821    .0369818
+------------------------------------------------------------------------------
+
+. 
+```
+
+# 2021-07-14
+## Bootstrap the difference between two treatments
+
+The Callaway-Sant'Anna ATT(g,t) effect is defined as
+$$
+\text{ATT}_{gt} = 
+\text E_{i:G(i)=g} (y_{it} - y_{ig})
+-
+\text E_{i:G(i)>t} (y_{it} - y_{ig}).
+$$
+Were are interested in the ATTs of multiple treatments that happen at the same time $g$. 
+
+We further restrict the control group to be such that they don't receive any of the treatments in the study period.
+
+Let treatment $k$ have treatment time $G_k(i)$. The control group for a pair $(g,t)$ is
+$$
+i: \min_k G_k(i) > t,
+$$
+and define 
+$$
+\gamma_{gt} \equiv 
+\text E_{i: \min_k G_k(i) > t} (y_{it} - y_{ig}).
+$$
+Then the ATT of treatment $k$ is
+$$
+\text{ATT}^k_{gt} = 
+\text E_{i:G_k(i)=g} (y_{it} - y_{ig})
+-
+\gamma_{gt}.
+$$
+We will also be interested in the relative efficacy of two treatments, which can be computed as
+$$
+\text{ATT}^k_{gt} - \text{ATT}^l_{gt}= 
+\text E_{i:G_k(i)=g} (y_{it} - y_{ig})
+-
+\text E_{i:G_l(i)=g} (y_{it} - y_{ig}),
+$$
+because the control group is the same for both treatments.
+
+```
+. attgt lnQL, treatment(has_expat_ceo) treatment2(foreign_only) pre(2) post(5) aggregate(e)
+
+Panel variable: frame_id_numeric (unbalanced)
+ Time variable: year, 1985 to 2018, but with gaps
+         Delta: 1 unit
+Generating weights...
+Estimating lnQL: event_m2
+Estimating lnQL: event_m1
+Estimating lnQL: event_1
+Estimating lnQL: event_2
+Estimating lnQL: event_3
+Estimating lnQL: event_4
+Estimating lnQL: event_5
+Callaway Sant'Anna (2021)
+
+                                                        Number of obs = 14,087
+
+------------------------------------------------------------------------------
+             | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+    event_m2 |   .0790276   .0676427     1.17   0.243    -.0535496    .2116048
+    event_m1 |   .0308842   .0448818     0.69   0.491    -.0570826     .118851
+     event_1 |   .1661652   .0538805     3.08   0.002     .0605614    .2717691
+     event_2 |    .292294   .0619047     4.72   0.000     .1709629    .4136251
+     event_3 |   .3292112   .0694408     4.74   0.000     .1931098    .4653127
+     event_4 |   .3484737   .0771349     4.52   0.000     .1972921    .4996554
+     event_5 |   .3166146   .0856003     3.70   0.000     .1488412    .4843881
+------------------------------------------------------------------------------
+
+. attgt exporter, treatment(has_expat_ceo) treatment2(foreign_only) pre(2) post(5) aggregate(e)
+
+Panel variable: frame_id_numeric (unbalanced)
+ Time variable: year, 1985 to 2018, but with gaps
+         Delta: 1 unit
+Generating weights...
+Estimating exporter: event_m2
+Estimating exporter: event_m1
+Estimating exporter: event_1
+Estimating exporter: event_2
+Estimating exporter: event_3
+Estimating exporter: event_4
+Estimating exporter: event_5
+Callaway Sant'Anna (2021)
+
+                                                        Number of obs = 14,087
+
+------------------------------------------------------------------------------
+             | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+    event_m2 |  -.0033099   .0270873    -0.12   0.903       -.0564    .0497801
+    event_m1 |  -.0009375   .0206869    -0.05   0.964    -.0414831    .0396081
+     event_1 |   .0442152   .0184495     2.40   0.017     .0080548    .0803756
+     event_2 |   .0529061   .0240689     2.20   0.028     .0057319    .1000803
+     event_3 |   .0807434   .0251196     3.21   0.001     .0315099     .129977
+     event_4 |    .101172   .0293931     3.44   0.001     .0435627    .1587814
+     event_5 |    .085313   .0306494     2.78   0.005     .0252413    .1453846
+------------------------------------------------------------------------------
+```
+
+# 2021-09-08
+## Fix several hard-to-detect bugs in the dual treatment case
+
+Now the control group does not matter (because there is no control group) and the inverse treatment results in almost exactly the inverse effect. The discrepancy is caused by weighting, which will be solved by #224.
+
+```
+. attgt lnQL, treatment(has_expat_ceo) treatment2(foreign_hire_only) aggregate(att) pre(3) post(5) reps(20)
+
+Panel variable: frame_id_numeric (unbalanced)
+ Time variable: year, 1985 to 2018, but with gaps
+         Delta: 1 unit
+Generating weights...
+Estimating lnQL: att
+Callaway Sant'Anna (2021)
+
+                                                         Number of obs = 3,383
+
+------------------------------------------------------------------------------
+             | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         att |   .3289614   .1027852     3.20   0.001      .127506    .5304167
+------------------------------------------------------------------------------
+
+. attgt lnQL, treatment(foreign_hire_only) treatment2(has_expat_ceo) aggregate(att) pre(3) post(5) reps(20)
+
+Panel variable: frame_id_numeric (unbalanced)
+ Time variable: year, 1985 to 2018, but with gaps
+         Delta: 1 unit
+Generating weights...
+Estimating lnQL: att
+Callaway Sant'Anna (2021)
+
+                                                         Number of obs = 3,383
+
+------------------------------------------------------------------------------
+             | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         att |  -.3192692   .1014718    -3.15   0.002    -.5181503   -.1203881
+------------------------------------------------------------------------------
+
+. 
+```
+
+# 2021-09-15
+## Symmetric group weights
+
+```
+. attgt lnQL, treatment(has_expat_ceo) treatment2(foreign_hire_only) aggregate(att) pre(3) post(5) reps(20)
+
+Panel variable: frame_id_numeric (unbalanced)
+ Time variable: year, 1985 to 2018, but with gaps
+         Delta: 1 unit
+Generating weights...
+Estimating lnQL: att
+Callaway Sant'Anna (2021)
+
+                                                         Number of obs = 3,383
+
+------------------------------------------------------------------------------
+             | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         att |   .3176849   .1021125     3.11   0.002     .1175481    .5178216
+------------------------------------------------------------------------------
+
+. attgt lnQL, treatment(foreign_hire_only) treatment2(has_expat_ceo) aggregate(att) pre(3) post(5) reps(20)
+
+Panel variable: frame_id_numeric (unbalanced)
+ Time variable: year, 1985 to 2018, but with gaps
+         Delta: 1 unit
+Generating weights...
+Estimating lnQL: att
+Callaway Sant'Anna (2021)
+
+                                                         Number of obs = 3,383
+
+------------------------------------------------------------------------------
+             | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         att |  -.3176849   .1021125    -3.11   0.002    -.5178216   -.1175481
+------------------------------------------------------------------------------
+```
+## 2022-02-07
+## Who are the control firms?
+### Monadic design
+
+Treatment: firm `i` hires an expat manager in year `t`
+
+```
+keep if ever_foreign
+attgt ..., notyet limitcontrol(foreign == 0)
+```
+
+Firms will be acquired later, they are still in domestic ownership at time `g` as well as time `t`.  
+
+For identification purposes, closest comparison group is the set of firms that hired a local manager in year `t`.
+
+### Dyadic design
+Treatment: firm `i` hires a manager from market `c` in year `t`
+
+Broad control group is the same: to be but not yet acquired domestic firms. They can be used to estimate firm and time fixed effects in a two-stage approach.
+
+Narrow control: firm `i` hires a expat manager from market `k=/=c` in year `t`
+
+(For illustrative purposes, work out first with only two markets, GER and ITA.)
