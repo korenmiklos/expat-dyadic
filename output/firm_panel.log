@@ -1,8 +1,8 @@
 -------------------------------------------------------------------------------
       name:  <unnamed>
-       log:  /Users/koren/Tresorit/projects/expat-dyadic//output/firm_panel.log
+       log:  /srv/sandbox/koren/expat-dyadic//output/firm_panel.log
   log type:  text
- opened on:   7 Feb 2022, 19:23:28
+ opened on:   7 Feb 2022, 20:10:26
 
 . 
 . * keep only sample from balance-small - NOTE: had to restructure as we have t
@@ -18,10 +18,8 @@
 . tempfile sample
 
 . save `sample', replace
-(file /var/folders/f4/7drmhl1d5kj3wp1r33jvx32m0000gn/T//St92928.000001 not
-    found)
-file /var/folders/f4/7drmhl1d5kj3wp1r33jvx32m0000gn/T//St92928.000001 saved
-    as .dta format
+(file /srv/sandbox/koren/St3786293.000001 not found)
+file /srv/sandbox/koren/St3786293.000001 saved as .dta format
 
 . 
 . use "`here'/input/ceo-panel/ceo-panel.dta", clear // QUESTION: what is owner
@@ -447,10 +445,10 @@ Distribution of T_i:   min      5%     25%       50%       75%     95%     max
 (27,193 real changes made)
 
 . bys frame_id_numeric (year): replace hire_expat = 0 if (_n==1)
-(2694 real changes made)
+(2,694 real changes made)
 
 . bys frame_id_numeric (year): replace fire_expat = 0 if (_n==_N)
-(2810 real changes made)
+(2,810 real changes made)
 
 . bys frame_id_numeric (year): gen ceo_spell = sum(hire_ceo | fire_ceo) + 1 // 
 > so that index start from 1
@@ -523,13 +521,12 @@ Distribution of T_i:   min      5%     25%       50%       75%     95%     max
   (20,721,393 bytes saved)
 
 . save "`here'/temp/firm_events.dta", replace
-(file /Users/koren/Tresorit/projects/expat-dyadic//temp/firm_events.dta not
-    found)
-file /Users/koren/Tresorit/projects/expat-dyadic//temp/firm_events.dta saved
+(file /srv/sandbox/koren/expat-dyadic//temp/firm_events.dta not found)
+file /srv/sandbox/koren/expat-dyadic//temp/firm_events.dta saved
 
 . log close
       name:  <unnamed>
-       log:  /Users/koren/Tresorit/projects/expat-dyadic//output/firm_panel.log
+       log:  /srv/sandbox/koren/expat-dyadic//output/firm_panel.log
   log type:  text
- closed on:   7 Feb 2022, 19:24:31
+ closed on:   7 Feb 2022, 20:11:09
 -------------------------------------------------------------------------------

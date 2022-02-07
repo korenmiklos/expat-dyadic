@@ -3,14 +3,14 @@ VARIABLES	LABELS	export	import	export	import
 					
 Lonly_owner	Only owner			0.007	-0.025***
 				(0.007)	(0.007)
-Lonly_manager	Only manager			0.022**	-0.027**
+Lonly_manager	Only manager			0.023**	-0.026**
 				(0.011)	(0.011)
 Lboth	Both			0.031***	-0.030***
 				(0.010)	(0.009)
 Lowner	Owner	0.019***	-0.020***		
 		(0.006)	(0.007)		
-Lmanager	Manager	0.025***	-0.020**		
+Lmanager	Manager	0.026***	-0.019**		
 		(0.008)	(0.008)		
 					
-Observations		3,127,512	3,127,512	3,127,512	3,127,512
+Observations		3,127,632	3,127,632	3,127,632	3,127,632
 Mean outcome		0.0332	0.0519	0.0332	0.0519
