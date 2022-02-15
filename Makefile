@@ -5,6 +5,8 @@ SPECS = descriptive manager_level heterogeneity event_study switch selection
 
 all: output/table/language.tex output/table/granger.tex output/table/trade.tex output/table/event_study.tex output/table/products.tex
 extra:  output/table/pairwise.tex output/table/gravity.tex output/table/placebo.tex output/figure/TE_owner.png
+output/correlations.log: code/estimate/correlations.do temp/analysis_sample_dyadic.dta
+	cd $(dir $@) && $(STATA) ../$<
 output/table/%.tex: code/estimate/%.do temp/analysis_sample_dyadic.dta
 	$(STATA) $<
 output/figure/TE_owner.png: code/estimate/TE.do temp/analysis_sample_dyadic.dta
