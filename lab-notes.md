@@ -4017,3 +4017,79 @@ exportIT_before |   .3186734    .051861     6.14   0.000     .2168212    .420525
           _cons |   .0173388   .0150198     1.15   0.249    -.0121594    .0468369
 ---------------------------------------------------------------------------------
 ```
+
+## Cross-sectional correlations across all  markets
+
+In the cross section, we can ask if firms with country `c` managers are more likely to export to country `c` than any other country. The answer is a strong yes, controlling for firm-year and country-year fixed effects and only looking at post-acquisition years.
+```
+reghdfe `X' manager owner `X'_before if time_foreign > 0 & !missing(time_foreign ), a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
+
+HDFE Linear regression                            Number of obs   =     58,800
+Absorbing 2 HDFE groups                           F(   3,    612) =     103.83
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.4179
+                                                  Adj R-squared   =     0.3900
+                                                  Within R-sq.    =     0.0746
+Number of clusters (frame_id_numeric) =        613Root MSE        =     0.2229
+
+                     (Std. err. adjusted for 613 clusters in frame_id_numeric)
+------------------------------------------------------------------------------
+             |               Robust
+      export | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+     manager |   .1252899   .0305909     4.10   0.000     .0652141    .1853657
+       owner |   .1411375   .0206497     6.83   0.000     .1005846    .1816904
+export_bef~e |   .2240169   .0166579    13.45   0.000     .1913034    .2567304
+       _cons |   .0598406   .0018308    32.69   0.000     .0562452     .063436
+------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------------------+
+             Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------------------+---------------------------------------|
+   frame_id_numeric#year |      2450        2450           0    *|
+                 cc#year |       240           1         239     |
+-----------------------------------------------------------------+
+* = FE nested within cluster; treated as redundant for DoF computation
+```
+
+The effect for importing is even stronger.
+
+If we limit the sample to those firms that *have not exported before acquisition* to country `c`, we still get very strong positive correlations. 
+```
+. reghdfe `X' manager owner if !`X'_before & time_foreign > 0 & !missing(time_foreign ), a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
+
+(dropped 11 singleton observations)
+(MWFE estimator converged in 5 iterations)
+
+HDFE Linear regression                            Number of obs   =     52,328
+Absorbing 2 HDFE groups                           F(   2,    606) =      16.08
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.2446
+                                                  Adj R-squared   =     0.2040
+                                                  Within R-sq.    =     0.0098
+Number of clusters (frame_id_numeric) =        607Root MSE        =     0.1844
+
+                     (Std. err. adjusted for 607 clusters in frame_id_numeric)
+------------------------------------------------------------------------------
+             |               Robust
+      export | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+     manager |   .1198145   .0384494     3.12   0.002     .0443043    .1953247
+       owner |   .0862939   .0228366     3.78   0.000     .0414453    .1311425
+       _cons |    .042205   .0004465    94.53   0.000     .0413282    .0430819
+------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------------------+
+             Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------------------+---------------------------------------|
+   frame_id_numeric#year |      2426        2426           0    *|
+                 cc#year |       240           1         239     |
+-----------------------------------------------------------------+
+* = FE nested within cluster; treated as redundant for DoF computation
+```
+
+One cannot estimate a firm-country fixed effect for these firms, as they have *not* exported before. What would the FE take out? 
+
+These are mostly cross-sectional correlations, but are very strong. The model also predicts strong cross-sectional sorting.
