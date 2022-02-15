@@ -22,8 +22,5 @@ tabulate export_before export
 tabulate manager export if time_foreign > 0 & !missing(time_foreign ), row
 tabulate manager export if !export_before & time_foreign > 0 & !missing(time_foreign ), row
 
-reghdfe export manager export_before if time_foreign > 0 & !missing(time_foreign ), a(teaor08_2d##year cc##year) cluster(frame_id_numeric )
-reghdfe export manager if !export_before & time_foreign > 0 & !missing(time_foreign ), a(teaor08_2d##year cc##year) cluster(frame_id_numeric )
-
 reghdfe export manager export_before if time_foreign > 0 & !missing(time_foreign ), a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
 reghdfe export manager if !export_before & time_foreign > 0 & !missing(time_foreign ), a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )

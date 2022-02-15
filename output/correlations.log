@@ -135,66 +135,6 @@ export_bef |     (max) export
 
 . 
 . reghdfe export manager export_before if time_foreign > 0 & !missing(time_fore
-> ign ), a(teaor08_2d##year cc##year) cluster(frame_id_numeric )
-(MWFE estimator converged in 2 iterations)
-
-HDFE Linear regression                            Number of obs   =     58,800
-Absorbing 2 HDFE groups                           F(   2,    612) =     105.93
-Statistics robust to heteroskedasticity           Prob > F        =     0.0000
-                                                  R-squared       =     0.2652
-                                                  Adj R-squared   =     0.2566
-                                                  Within R-sq.    =     0.1294
-Number of clusters (frame_id_numeric) =        613Root MSE        =     0.2461
-
-                     (Std. err. adjusted for 613 clusters in frame_id_numeric)
-------------------------------------------------------------------------------
-             |               Robust
-      export | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
--------------+----------------------------------------------------------------
-     manager |   .1985952   .0299257     6.64   0.000     .1398256    .2573648
-export_bef~e |    .323253    .028697    11.26   0.000     .2668966    .3796095
-       _cons |   .0512211   .0039861    12.85   0.000     .0433931    .0590491
-------------------------------------------------------------------------------
-
-Absorbed degrees of freedom:
------------------------------------------------------------+
-       Absorbed FE | Categories  - Redundant  = Num. Coefs |
--------------------+---------------------------------------|
-   teaor08_2d#year |       452           0         452     |
-           cc#year |       240          10         230     |
------------------------------------------------------------+
-
-. reghdfe export manager if !export_before & time_foreign > 0 & !missing(time_f
-> oreign ), a(teaor08_2d##year cc##year) cluster(frame_id_numeric )
-(MWFE estimator converged in 4 iterations)
-
-HDFE Linear regression                            Number of obs   =     52,339
-Absorbing 2 HDFE groups                           F(   1,    608) =      22.54
-Statistics robust to heteroskedasticity           Prob > F        =     0.0000
-                                                  R-squared       =     0.0797
-                                                  Adj R-squared   =     0.0676
-                                                  Within R-sq.    =     0.0071
-Number of clusters (frame_id_numeric) =        609Root MSE        =     0.1997
-
-                     (Std. err. adjusted for 609 clusters in frame_id_numeric)
-------------------------------------------------------------------------------
-             |               Robust
-      export | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
--------------+----------------------------------------------------------------
-     manager |   .1829493   .0385324     4.75   0.000     .1072766    .2586221
-       _cons |   .0431335   .0034395    12.54   0.000     .0363787    .0498883
-------------------------------------------------------------------------------
-
-Absorbed degrees of freedom:
------------------------------------------------------------+
-       Absorbed FE | Categories  - Redundant  = Num. Coefs |
--------------------+---------------------------------------|
-   teaor08_2d#year |       448           0         448     |
-           cc#year |       240          10         230     |
------------------------------------------------------------+
-
-. 
-. reghdfe export manager export_before if time_foreign > 0 & !missing(time_fore
 > ign ), a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
 (MWFE estimator converged in 2 iterations)
 
