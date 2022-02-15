@@ -2,7 +2,7 @@ here
 local here = r(here)
 
 use "`here'/temp/analysis_sample_dyadic.dta"
-keep frame_id_numeric year country export import manager owner time_foreign teaor08_2d  
+keep frame_id_numeric year country export import Lmanager Lowner time_foreign teaor08_2d  
 drop if country=="XX"
 egen cc = group(country)
 
@@ -20,9 +20,9 @@ foreach X in export import {
     egen `X'_before = max(`X' & time_foreign < 0), by(frame_id_numeric country)
     tabulate `X'_before `X'
 
-    reghdfe `X' manager owner `X'_before if `timing', a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
-    reghdfe `X' manager owner if !`X'_before & `timing', a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
+    reghdfe `X' Lmanager Lowner `X'_before if `timing', a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
+    reghdfe `X' Lmanager Lowner if !`X'_before & `timing', a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
 }
 
-tabulate manager export if `timing', row
-tabulate manager export if !export_before & `timing', row
+tabulate Lmanager export if `timing', row
+tabulate Lmanager export if !export_before & `timing', row

@@ -31,8 +31,8 @@ Notes:
 . 
 . use "`here'/temp/analysis_sample_dyadic.dta"
 
-. keep frame_id_numeric year country export import manager owner time_foreign t
-> eaor08_2d  
+. keep frame_id_numeric year country export import Lmanager Lowner time_foreign
+>  teaor08_2d  
 
 . drop if country=="XX"
 (132,392 observations deleted)
@@ -82,10 +82,10 @@ acquired_in |
 > ntry)
   3.     tabulate `X'_before `X'
   4. 
-.     reghdfe `X' manager owner `X'_before if `timing', a(frame_id_numeric##yea
-> r cc##year) cluster(frame_id_numeric )
-  5.     reghdfe `X' manager owner if !`X'_before & `timing', a(frame_id_numeri
-> c##year cc##year) cluster(frame_id_numeric )
+.     reghdfe `X' Lmanager Lowner `X'_before if `timing', a(frame_id_numeric##y
+> ear cc##year) cluster(frame_id_numeric )
+  5.     reghdfe `X' Lmanager Lowner if !`X'_before & `timing', a(frame_id_nume
+> ric##year cc##year) cluster(frame_id_numeric )
   6. }
 
 export_bef |     (max) export
@@ -98,22 +98,22 @@ export_bef |     (max) export
 (MWFE estimator converged in 2 iterations)
 
 HDFE Linear regression                            Number of obs   =     76,296
-Absorbing 2 HDFE groups                           F(   3,    728) =     141.20
+Absorbing 2 HDFE groups                           F(   3,    728) =     131.81
 Statistics robust to heteroskedasticity           Prob > F        =     0.0000
-                                                  R-squared       =     0.4271
-                                                  Adj R-squared   =     0.4000
-                                                  Within R-sq.    =     0.0904
-Number of clusters (frame_id_numeric) =        729Root MSE        =     0.2153
+                                                  R-squared       =     0.4261
+                                                  Adj R-squared   =     0.3990
+                                                  Within R-sq.    =     0.0888
+Number of clusters (frame_id_numeric) =        729Root MSE        =     0.2155
 
                      (Std. err. adjusted for 729 clusters in frame_id_numeric)
 ------------------------------------------------------------------------------
              |               Robust
       export | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-     manager |   .1163768    .027273     4.27   0.000     .0628337    .1699198
-       owner |   .1432432   .0188153     7.61   0.000     .1063044     .180182
-export_bef~e |   .2491834   .0153298    16.25   0.000     .2190875    .2792793
-       _cons |   .0525856   .0016676    31.53   0.000     .0493118    .0558594
+    Lmanager |   .0975733   .0280446     3.48   0.001     .0425153    .1526312
+      Lowner |   .1442874   .0213263     6.77   0.000      .102419    .1861559
+export_bef~e |   .2502243      .0153    16.35   0.000      .220187    .2802616
+       _cons |   .0526999   .0016779    31.41   0.000     .0494057    .0559941
 ------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
@@ -128,11 +128,11 @@ Absorbed degrees of freedom:
 (MWFE estimator converged in 5 iterations)
 
 HDFE Linear regression                            Number of obs   =     67,965
-Absorbing 2 HDFE groups                           F(   2,    722) =      18.35
+Absorbing 2 HDFE groups                           F(   2,    722) =      16.66
 Statistics robust to heteroskedasticity           Prob > F        =     0.0000
-                                                  R-squared       =     0.2344
-                                                  Adj R-squared   =     0.1939
-                                                  Within R-sq.    =     0.0093
+                                                  R-squared       =     0.2341
+                                                  Adj R-squared   =     0.1936
+                                                  Within R-sq.    =     0.0089
 Number of clusters (frame_id_numeric) =        723Root MSE        =     0.1731
 
                      (Std. err. adjusted for 723 clusters in frame_id_numeric)
@@ -140,9 +140,9 @@ Number of clusters (frame_id_numeric) =        723Root MSE        =     0.1731
              |               Robust
       export | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-     manager |   .1035272   .0328888     3.15   0.002     .0389582    .1680963
-       owner |   .0874532   .0203235     4.30   0.000     .0475529    .1273535
-       _cons |   .0364219    .000371    98.17   0.000     .0356935    .0371503
+    Lmanager |   .0909215   .0326822     2.78   0.006      .026758     .155085
+      Lowner |   .0932471   .0231785     4.02   0.000     .0477418    .1387523
+       _cons |   .0364233   .0003888    93.67   0.000     .0356599    .0371867
 ------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
@@ -164,22 +164,22 @@ import_bef |     (max) import
 (MWFE estimator converged in 2 iterations)
 
 HDFE Linear regression                            Number of obs   =     76,296
-Absorbing 2 HDFE groups                           F(   3,    728) =     322.33
+Absorbing 2 HDFE groups                           F(   3,    728) =     283.27
 Statistics robust to heteroskedasticity           Prob > F        =     0.0000
-                                                  R-squared       =     0.4326
-                                                  Adj R-squared   =     0.4058
-                                                  Within R-sq.    =     0.1126
-Number of clusters (frame_id_numeric) =        729Root MSE        =     0.2592
+                                                  R-squared       =     0.4311
+                                                  Adj R-squared   =     0.4042
+                                                  Within R-sq.    =     0.1101
+Number of clusters (frame_id_numeric) =        729Root MSE        =     0.2596
 
                      (Std. err. adjusted for 729 clusters in frame_id_numeric)
 ------------------------------------------------------------------------------
              |               Robust
       import | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-     manager |   .1826616   .0248711     7.34   0.000     .1338339    .2314892
-       owner |    .138855   .0175778     7.90   0.000     .1043457    .1733643
-import_bef~e |   .2923983   .0128576    22.74   0.000     .2671559    .3176406
-       _cons |   .0807179   .0018569    43.47   0.000     .0770723    .0843635
+    Lmanager |   .1527329   .0271864     5.62   0.000     .0993599     .206106
+      Lowner |   .1389562   .0204373     6.80   0.000     .0988331    .1790794
+import_bef~e |   .2926918   .0128849    22.72   0.000     .2673958    .3179878
+       _cons |   .0810734    .001868    43.40   0.000     .0774061    .0847407
 ------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
@@ -194,21 +194,21 @@ Absorbed degrees of freedom:
 (MWFE estimator converged in 5 iterations)
 
 HDFE Linear regression                            Number of obs   =     64,834
-Absorbing 2 HDFE groups                           F(   2,    724) =      33.18
+Absorbing 2 HDFE groups                           F(   2,    724) =      25.25
 Statistics robust to heteroskedasticity           Prob > F        =     0.0000
-                                                  R-squared       =     0.2679
-                                                  Adj R-squared   =     0.2271
-                                                  Within R-sq.    =     0.0110
-Number of clusters (frame_id_numeric) =        725Root MSE        =     0.2126
+                                                  R-squared       =     0.2662
+                                                  Adj R-squared   =     0.2253
+                                                  Within R-sq.    =     0.0087
+Number of clusters (frame_id_numeric) =        725Root MSE        =     0.2129
 
                      (Std. err. adjusted for 725 clusters in frame_id_numeric)
 ------------------------------------------------------------------------------
              |               Robust
       import | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-     manager |    .232209   .0381203     6.09   0.000     .1573694    .3070485
-       owner |   .0751913   .0210169     3.58   0.000       .03393    .1164527
-       _cons |   .0600287   .0002972   202.01   0.000     .0594453    .0606121
+    Lmanager |   .2000243   .0413772     4.83   0.000     .1187907     .281258
+      Lowner |   .0829756   .0241158     3.44   0.001     .0356303    .1303208
+       _cons |   .0602176   .0003134   192.15   0.000     .0596023    .0608329
 ------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
@@ -221,7 +221,7 @@ Absorbed degrees of freedom:
 * = FE nested within cluster; treated as redundant for DoF computation
 
 . 
-. tabulate manager export if `timing', row
+. tabulate Lmanager export if `timing', row
 
 +----------------+
 | Key            |
@@ -231,18 +231,18 @@ Absorbed degrees of freedom:
 +----------------+
 
            |     (max) export
-   manager |         0          1 |     Total
+  Lmanager |         0          1 |     Total
 -----------+----------------------+----------
-         0 |    69,281      6,023 |    75,304 
-           |     92.00       8.00 |    100.00 
+         0 |    69,275      6,038 |    75,313 
+           |     91.98       8.02 |    100.00 
 -----------+----------------------+----------
-         1 |       579        413 |       992 
-           |     58.37      41.63 |    100.00 
+         1 |       585        398 |       983 
+           |     59.51      40.49 |    100.00 
 -----------+----------------------+----------
      Total |    69,860      6,436 |    76,296 
            |     91.56       8.44 |    100.00 
 
-. tabulate manager export if !export_before & `timing', row
+. tabulate Lmanager export if !export_before & `timing', row
 
 +----------------+
 | Key            |
@@ -252,13 +252,13 @@ Absorbed degrees of freedom:
 +----------------+
 
            |     (max) export
-   manager |         0          1 |     Total
+  Lmanager |         0          1 |     Total
 -----------+----------------------+----------
-         0 |    64,897      2,500 |    67,397 
+         0 |    64,892      2,498 |    67,390 
            |     96.29       3.71 |    100.00 
 -----------+----------------------+----------
-         1 |       451        130 |       581 
-           |     77.62      22.38 |    100.00 
+         1 |       456        132 |       588 
+           |     77.55      22.45 |    100.00 
 -----------+----------------------+----------
      Total |    65,348      2,630 |    67,978 
            |     96.13       3.87 |    100.00 
