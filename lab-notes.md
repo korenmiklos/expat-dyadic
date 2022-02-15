@@ -3515,3 +3515,505 @@ Broad control group is the same: to be but not yet acquired domestic firms. They
 Narrow control: firm `i` hires a expat manager from market `k=/=c` in year `t`
 
 (For illustrative purposes, work out first with only two markets, GER and ITA.)
+
+# 2022-02-15
+## Explorative Data Analysis of DE and IT
+
+Keep only acquisitions:
+```
+egen byte acquired_in_sample = max(time_foreign == 0), by(frame_id_numeric )
+tabulate acquired_in_sample 
+keep if acquired_in_sample 
+drop acquired_in_sample 
+egen byte acquired_in_sample = max(time_foreign <= -1), by(frame_id_numeric )
+tabulate acquired_in_sample 
+keep if acquired_in_sample 
+drop acquired_in_sample 
+```
+
+There are many more traders than managers:
+```
+. tabulate time_foreign exportDE if abs(time_foreign) <= 2, row
+
++----------------+
+| Key            |
+|----------------|
+|   frequency    |
+| row percentage |
++----------------+
+
+time_forei |       DE export
+        gn |         0          1 |     Total
+-----------+----------------------+----------
+        -2 |       358        112 |       470 
+           |     76.17      23.83 |    100.00 
+-----------+----------------------+----------
+        -1 |       507        166 |       673 
+           |     75.33      24.67 |    100.00 
+-----------+----------------------+----------
+         0 |       550        179 |       729 
+           |     75.45      24.55 |    100.00 
+-----------+----------------------+----------
+         1 |       448        153 |       601 
+           |     74.54      25.46 |    100.00 
+-----------+----------------------+----------
+         2 |       339        124 |       463 
+           |     73.22      26.78 |    100.00 
+-----------+----------------------+----------
+     Total |     2,202        734 |     2,936 
+           |     75.00      25.00 |    100.00 
+
+. tabulate time_foreign managerDE if abs(time_foreign) <= 2, row
+
++----------------+
+| Key            |
+|----------------|
+|   frequency    |
+| row percentage |
++----------------+
+
+time_forei |      DE manager
+        gn |         0          1 |     Total
+-----------+----------------------+----------
+        -2 |       470          0 |       470 
+           |    100.00       0.00 |    100.00 
+-----------+----------------------+----------
+        -1 |       670          3 |       673 
+           |     99.55       0.45 |    100.00 
+-----------+----------------------+----------
+         0 |       665         64 |       729 
+           |     91.22       8.78 |    100.00 
+-----------+----------------------+----------
+         1 |       546         55 |       601 
+           |     90.85       9.15 |    100.00 
+-----------+----------------------+----------
+         2 |       410         53 |       463 
+           |     88.55      11.45 |    100.00 
+-----------+----------------------+----------
+     Total |     2,761        175 |     2,936 
+           |     94.04       5.96 |    100.00 
+```
+
+Trade across the two markets is highly correlated
+```
+. reghdfe exportDE exportIT managerDE managerIT, a(frame_id_numeric year time_foreign ) cluster(frame_id_numeric
+>  )
+(MWFE estimator converged in 8 iterations)
+
+HDFE Linear regression                            Number of obs   =      5,693
+Absorbing 3 HDFE groups                           F(   3,    728) =      14.96
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.6862
+                                                  Adj R-squared   =     0.6376
+                                                  Within R-sq.    =     0.0253
+Number of clusters (frame_id_numeric) =        729Root MSE        =     0.2635
+
+                     (Std. err. adjusted for 729 clusters in frame_id_numeric)
+------------------------------------------------------------------------------
+             |               Robust
+    exportDE | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+    exportIT |    .206917   .0322411     6.42   0.000     .1436204    .2702136
+   managerDE |   .0249185   .0348172     0.72   0.474    -.0434356    .0932725
+   managerIT |   -.078756   .0789129    -1.00   0.319    -.2336799    .0761679
+       _cons |   .2341468   .0046015    50.88   0.000      .225113    .2431806
+------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+----------------------------------------------------------+
+      Absorbed FE | Categories  - Redundant  = Num. Coefs |
+------------------+---------------------------------------|
+ frame_id_numeric |       729         729           0    *|
+             year |        12           1          11     |
+     time_foreign |        22           1          21     |
+----------------------------------------------------------+
+* = FE nested within cluster; treated as redundant for DoF computation
+```
+
+Explore the entry into export markets
+```
+. egen exportDE_before = max(exportDE & time_foreign < 0), by(frame_id_numeric )
+
+. egen exportIT_before = max(exportIT & time_foreign < 0), by(frame_id_numeric )
+
+. tabulate exportDE_before exportDE 
+
+exportDE_b |       DE export
+     efore |         0          1 |     Total
+-----------+----------------------+----------
+         0 |     3,474        197 |     3,671 
+         1 |       748      1,274 |     2,022 
+-----------+----------------------+----------
+     Total |     4,222      1,471 |     5,693 
+
+. tabulate exportIT_before exportIT 
+
+exportIT_b |       IT export
+     efore |         0          1 |     Total
+-----------+----------------------+----------
+         0 |     4,596        120 |     4,716 
+         1 |       442        535 |       977 
+-----------+----------------------+----------
+     Total |     5,038        655 |     5,693 
+```
+
+There is some raw correlation, but very few observations
+```
+. tabulate managerDE exportDE if !exportDE_before & time_foreign > 0 & !missing(time_foreign ), row
+
++----------------+
+| Key            |
+|----------------|
+|   frequency    |
+| row percentage |
++----------------+
+
+           |       DE export
+DE manager |         0          1 |     Total
+-----------+----------------------+----------
+         0 |     1,282        144 |     1,426 
+           |     89.90      10.10 |    100.00 
+-----------+----------------------+----------
+         1 |       107         26 |       133 
+           |     80.45      19.55 |    100.00 
+-----------+----------------------+----------
+     Total |     1,389        170 |     1,559 
+           |     89.10      10.90 |    100.00 
+
+. tabulate managerIT exportIT if !exportIT_before & time_foreign > 0 & !missing(time_foreign ), row
+
++----------------+
+| Key            |
+|----------------|
+|   frequency    |
+| row percentage |
++----------------+
+
+           |       IT export
+IT manager |         0          1 |     Total
+-----------+----------------------+----------
+         0 |     1,903         98 |     2,001 
+           |     95.10       4.90 |    100.00 
+-----------+----------------------+----------
+         1 |        34          6 |        40 
+           |     85.00      15.00 |    100.00 
+-----------+----------------------+----------
+     Total |     1,937        104 |     2,041 
+           |     94.90       5.10 |    100.00 
+```
+The placebo treatment (manager from the other market) does not seem to work:
+```
+. tabulate managerIT exportDE if !exportDE_before & time_foreign > 0 & !missing(time_foreign ), row
+
++----------------+
+| Key            |
+|----------------|
+|   frequency    |
+| row percentage |
++----------------+
+
+           |       DE export
+IT manager |         0          1 |     Total
+-----------+----------------------+----------
+         0 |     1,336        164 |     1,500 
+           |     89.07      10.93 |    100.00 
+-----------+----------------------+----------
+         1 |        53          6 |        59 
+           |     89.83      10.17 |    100.00 
+-----------+----------------------+----------
+     Total |     1,389        170 |     1,559 
+           |     89.10      10.90 |    100.00 
+
+. tabulate managerDE exportIT if !exportIT_before & time_foreign > 0 & !missing(time_foreign ), row
+
++----------------+
+| Key            |
+|----------------|
+|   frequency    |
+| row percentage |
++----------------+
+
+           |       IT export
+DE manager |         0          1 |     Total
+-----------+----------------------+----------
+         0 |     1,680         96 |     1,776 
+           |     94.59       5.41 |    100.00 
+-----------+----------------------+----------
+         1 |       257          8 |       265 
+           |     96.98       3.02 |    100.00 
+-----------+----------------------+----------
+     Total |     1,937        104 |     2,041 
+           |     94.90       5.10 |    100.00 
+```
+
+More liberal specification: include traders who already began before acquision. Correlation is stronger.
+```
+. tabulate managerIT exportIT if time_foreign > 0 & !missing(time_foreign ), row
+
++----------------+
+| Key            |
+|----------------|
+|   frequency    |
+| row percentage |
++----------------+
+
+           |       IT export
+IT manager |         0          1 |     Total
+-----------+----------------------+----------
+         0 |     2,095        281 |     2,376 
+           |     88.17      11.83 |    100.00 
+-----------+----------------------+----------
+         1 |        47         27 |        74 
+           |     63.51      36.49 |    100.00 
+-----------+----------------------+----------
+     Total |     2,142        308 |     2,450 
+           |     87.43      12.57 |    100.00 
+
+. tabulate managerDE exportDE if time_foreign > 0 & !missing(time_foreign ), row
+
++----------------+
+| Key            |
+|----------------|
+|   frequency    |
+| row percentage |
++----------------+
+
+           |       DE export
+DE manager |         0          1 |     Total
+-----------+----------------------+----------
+         0 |     1,584        562 |     2,146 
+           |     73.81      26.19 |    100.00 
+-----------+----------------------+----------
+         1 |       152        152 |       304 
+           |     50.00      50.00 |    100.00 
+-----------+----------------------+----------
+     Total |     1,736        714 |     2,450 
+           |     70.86      29.14 |    100.00 
+
+```
+Placebo still does not work:
+```
+. tabulate managerDE exportIT if time_foreign > 0 & !missing(time_foreign ), row
+
++----------------+
+| Key            |
+|----------------|
+|   frequency    |
+| row percentage |
++----------------+
+
+           |       IT export
+DE manager |         0          1 |     Total
+-----------+----------------------+----------
+         0 |     1,877        269 |     2,146 
+           |     87.47      12.53 |    100.00 
+-----------+----------------------+----------
+         1 |       265         39 |       304 
+           |     87.17      12.83 |    100.00 
+-----------+----------------------+----------
+     Total |     2,142        308 |     2,450 
+           |     87.43      12.57 |    100.00 
+
+. tabulate managerIT exportDE if time_foreign > 0 & !missing(time_foreign ), row
+
++----------------+
+| Key            |
+|----------------|
+|   frequency    |
+| row percentage |
++----------------+
+
+           |       DE export
+IT manager |         0          1 |     Total
+-----------+----------------------+----------
+         0 |     1,676        700 |     2,376 
+           |     70.54      29.46 |    100.00 
+-----------+----------------------+----------
+         1 |        60         14 |        74 
+           |     81.08      18.92 |    100.00 
+-----------+----------------------+----------
+     Total |     1,736        714 |     2,450 
+           |     70.86      29.14 |    100.00 
+
+```
+Regressions also confirm positive correlation between manager and exporting:
+```
+. reghdfe exportDE managerDE  if time_foreign > 0 & !missing(time_foreign ), a(teaor08_2d##year) cluster(frame_i
+> d_numeric )
+(dropped 104 singleton observations)
+(MWFE estimator converged in 1 iterations)
+
+HDFE Linear regression                            Number of obs   =      2,346
+Absorbing 1 HDFE group                            F(   1,    597) =       5.72
+Statistics robust to heteroskedasticity           Prob > F        =     0.0171
+                                                  R-squared       =     0.3544
+                                                  Adj R-squared   =     0.2419
+                                                  Within R-sq.    =     0.0099
+Number of clusters (frame_id_numeric) =        598Root MSE        =     0.3983
+
+                     (Std. err. adjusted for 598 clusters in frame_id_numeric)
+------------------------------------------------------------------------------
+             |               Robust
+    exportDE | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+   managerDE |   .1214032   .0507504     2.39   0.017     .0217323    .2210742
+       _cons |   .2823775    .016674    16.94   0.000     .2496306    .3151244
+------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------------+
+       Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------------+---------------------------------------|
+   teaor08_2d#year |       348           0         348     |
+-----------------------------------------------------------+
+
+. reghdfe exportIT managerIT if time_foreign > 0 & !missing(time_foreign ), a(teaor08_2d##year) cluster(frame_id
+> _numeric )
+(dropped 104 singleton observations)
+(MWFE estimator converged in 1 iterations)
+
+HDFE Linear regression                            Number of obs   =      2,346
+Absorbing 1 HDFE group                            F(   1,    597) =       4.26
+Statistics robust to heteroskedasticity           Prob > F        =     0.0394
+                                                  R-squared       =     0.2297
+                                                  Adj R-squared   =     0.0955
+                                                  Within R-sq.    =     0.0153
+Number of clusters (frame_id_numeric) =        598Root MSE        =     0.3181
+
+                     (Std. err. adjusted for 598 clusters in frame_id_numeric)
+------------------------------------------------------------------------------
+             |               Robust
+    exportIT | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+   managerIT |   .2268173    .109842     2.06   0.039     .0110937     .442541
+       _cons |    .121149   .0129225     9.38   0.000     .0957699    .1465281
+------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------------+
+       Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------------+---------------------------------------|
+   teaor08_2d#year |       348           0         348     |
+-----------------------------------------------------------+
+```
+
+## Lessons
+This is mostly a cross-sectional correlation. Firms that have a German manager tend to trade with Germany, not Italy. But this is not a problem, as any model would predict strong cross-sectional sorting.
+
+Correlation is there, but weaker, in a dynamic panel:
+```
+. reghdfe exportDE managerDE exportDE_before  if time_foreign > 0 & !missing(time_foreign ), a(teaor08_2d##year)
+>  cluster(frame_id_numeric )
+(dropped 104 singleton observations)
+(MWFE estimator converged in 1 iterations)
+
+HDFE Linear regression                            Number of obs   =      2,346
+Absorbing 1 HDFE group                            F(   2,    597) =      42.66
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.4465
+                                                  Adj R-squared   =     0.3498
+                                                  Within R-sq.    =     0.1512
+Number of clusters (frame_id_numeric) =        598Root MSE        =     0.3689
+
+                        (Std. err. adjusted for 598 clusters in frame_id_numeric)
+---------------------------------------------------------------------------------
+                |               Robust
+       exportDE | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+----------------+----------------------------------------------------------------
+      managerDE |   .0851471   .0463304     1.84   0.067    -.0058432    .1761375
+exportDE_before |   .3574442   .0408425     8.75   0.000     .2772318    .4376566
+          _cons |   .1544733   .0181919     8.49   0.000     .1187454    .1902011
+---------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------------+
+       Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------------+---------------------------------------|
+   teaor08_2d#year |       348           0         348     |
+-----------------------------------------------------------+
+
+. reghdfe exportIT managerIT exportIT_before  if time_foreign > 0 & !missing(time_foreign ), a(teaor08_2d##year)
+>  cluster(frame_id_numeric )
+(dropped 104 singleton observations)
+(MWFE estimator converged in 1 iterations)
+
+HDFE Linear regression                            Number of obs   =      2,346
+Absorbing 1 HDFE group                            F(   2,    597) =      25.19
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.3569
+                                                  Adj R-squared   =     0.2444
+                                                  Within R-sq.    =     0.1778
+Number of clusters (frame_id_numeric) =        598Root MSE        =     0.2908
+
+                        (Std. err. adjusted for 598 clusters in frame_id_numeric)
+---------------------------------------------------------------------------------
+                |               Robust
+       exportIT | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+----------------+----------------------------------------------------------------
+      managerIT |   .1340069   .0985707     1.36   0.175    -.0595805    .3275944
+exportIT_before |   .3652435   .0531487     6.87   0.000     .2608623    .4696247
+          _cons |     .06149   .0109437     5.62   0.000     .0399972    .0829828
+---------------------------------------------------------------------------------
+```
+
+Richest distributed lag specification is most convincing:
+```
+. reghdfe exportDE exportIT  managerDE managerIT  exportDE_before exportIT_before   if time_foreign > 0 & !missi
+> ng(time_foreign ), a(teaor08_2d##year) cluster(frame_id_numeric )
+(dropped 104 singleton observations)
+(MWFE estimator converged in 1 iterations)
+
+HDFE Linear regression                            Number of obs   =      2,346
+Absorbing 1 HDFE group                            F(   5,    597) =      40.75
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.4875
+                                                  Adj R-squared   =     0.3969
+                                                  Within R-sq.    =     0.2139
+Number of clusters (frame_id_numeric) =        598Root MSE        =     0.3552
+
+                        (Std. err. adjusted for 598 clusters in frame_id_numeric)
+---------------------------------------------------------------------------------
+                |               Robust
+       exportDE | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+----------------+----------------------------------------------------------------
+       exportIT |   .3110704   .0512622     6.07   0.000     .2103943    .4117466
+      managerDE |   .1011004   .0451523     2.24   0.026     .0124236    .1897771
+      managerIT |  -.1042823   .0561181    -1.86   0.064    -.2144952    .0059306
+exportDE_before |    .303881   .0422916     7.19   0.000     .2208226    .3869394
+exportIT_before |   .0241925   .0494012     0.49   0.625    -.0728288    .1212139
+          _cons |   .1315224   .0178407     7.37   0.000     .0964842    .1665606
+---------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------------+
+       Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------------+---------------------------------------|
+   teaor08_2d#year |       348           0         348     |
+-----------------------------------------------------------+
+
+. reghdfe exportIT exportDE  managerDE managerIT  exportDE_before exportIT_before   if time_foreign > 0 & !missi
+> ng(time_foreign ), a(teaor08_2d##year) cluster(frame_id_numeric )
+(dropped 104 singleton observations)
+(MWFE estimator converged in 1 iterations)
+
+HDFE Linear regression                            Number of obs   =      2,346
+Absorbing 1 HDFE group                            F(   5,    597) =      20.32
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.3991
+                                                  Adj R-squared   =     0.2929
+                                                  Within R-sq.    =     0.2317
+Number of clusters (frame_id_numeric) =        598Root MSE        =     0.2813
+
+                        (Std. err. adjusted for 598 clusters in frame_id_numeric)
+---------------------------------------------------------------------------------
+                |               Robust
+       exportIT | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+----------------+----------------------------------------------------------------
+       exportDE |   .1950095   .0321383     6.07   0.000     .1318917    .2581273
+      managerDE |   -.024408   .0303689    -0.80   0.422     -.084051    .0352349
+      managerIT |   .1548591   .0924797     1.67   0.095     -.026766    .3364843
+exportDE_before |  -.0094343   .0323273    -0.29   0.771    -.0729234    .0540548
+exportIT_before |   .3186734    .051861     6.14   0.000     .2168212    .4205255
+          _cons |   .0173388   .0150198     1.15   0.249    -.0121594    .0468369
+---------------------------------------------------------------------------------
+```
