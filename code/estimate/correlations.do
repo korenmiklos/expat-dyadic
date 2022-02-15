@@ -22,6 +22,7 @@ foreach X in export import {
 
     reghdfe `X' manager owner `X'_before if `timing', a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
     reghdfe `X' manager owner if !`X'_before & `timing', a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
+    reghdfe `X' manager owner if `X'_before & `timing', a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
 }
 
 tabulate manager export if `timing', row

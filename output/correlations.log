@@ -86,7 +86,9 @@ acquired_in |
 > r cc##year) cluster(frame_id_numeric )
   5.     reghdfe `X' manager owner if !`X'_before & `timing', a(frame_id_numeri
 > c##year cc##year) cluster(frame_id_numeric )
-  6. }
+  6.     reghdfe `X' manager owner if `X'_before & `timing', a(frame_id_numeric
+> ##year cc##year) cluster(frame_id_numeric )
+  7. }
 
 export_bef |     (max) export
        ore |         0          1 |     Total
@@ -153,6 +155,35 @@ Absorbed degrees of freedom:
                  cc#year |       264           1         263     |
 -----------------------------------------------------------------+
 * = FE nested within cluster; treated as redundant for DoF computation
+(dropped 630 singleton observations)
+(MWFE estimator converged in 10 iterations)
+
+HDFE Linear regression                            Number of obs   =      7,688
+Absorbing 2 HDFE groups                           F(   2,    248) =      29.78
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.4887
+                                                  Adj R-squared   =     0.3786
+                                                  Within R-sq.    =     0.0267
+Number of clusters (frame_id_numeric) =        249Root MSE        =     0.3929
+
+                     (Std. err. adjusted for 249 clusters in frame_id_numeric)
+------------------------------------------------------------------------------
+             |               Robust
+      export | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+     manager |   .1807366   .0529354     3.41   0.001     .0764763    .2849968
+       owner |   .2361288   .0378174     6.24   0.000     .1616445     .310613
+       _cons |   .4413854   .0025524   172.93   0.000     .4363583    .4464125
+------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------------------+
+             Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------------------+---------------------------------------|
+   frame_id_numeric#year |      1101        1101           0    *|
+                 cc#year |       261           1         260     |
+-----------------------------------------------------------------+
+* = FE nested within cluster; treated as redundant for DoF computation
 
 import_bef |     (max) import
        ore |         0          1 |     Total
@@ -217,6 +248,35 @@ Absorbed degrees of freedom:
 -------------------------+---------------------------------------|
    frame_id_numeric#year |      3158        3158           0    *|
                  cc#year |       264           1         263     |
+-----------------------------------------------------------------+
+* = FE nested within cluster; treated as redundant for DoF computation
+(dropped 464 singleton observations)
+(MWFE estimator converged in 9 iterations)
+
+HDFE Linear regression                            Number of obs   =     10,982
+Absorbing 2 HDFE groups                           F(   2,    381) =      34.96
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.4618
+                                                  Adj R-squared   =     0.3397
+                                                  Within R-sq.    =     0.0211
+Number of clusters (frame_id_numeric) =        382Root MSE        =     0.4061
+
+                     (Std. err. adjusted for 382 clusters in frame_id_numeric)
+------------------------------------------------------------------------------
+             |               Robust
+      import | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+     manager |   .1161952   .0451018     2.58   0.010     .0275155    .2048749
+       owner |   .2043805   .0336585     6.07   0.000     .1382007    .2705603
+       _cons |   .4953471   .0022462   220.52   0.000     .4909305    .4997637
+------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------------------+
+             Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------------------+---------------------------------------|
+   frame_id_numeric#year |      1775        1775           0    *|
+                 cc#year |       256           1         255     |
 -----------------------------------------------------------------+
 * = FE nested within cluster; treated as redundant for DoF computation
 
