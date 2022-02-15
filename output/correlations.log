@@ -1,0 +1,260 @@
+
+  ___  ____  ____  ____  ____ ®
+ /__    /   ____/   /   ____/      17.0
+___/   /   /___/   /   /___/       MP—Parallel Edition
+
+ Statistics and Data Science       Copyright 1985-2021 StataCorp LLC
+                                   StataCorp
+                                   4905 Lakeway Drive
+                                   College Station, Texas 77845 USA
+                                   800-STATA-PC        https://www.stata.com
+                                   979-696-4600        stata@stata.com
+
+Stata license: Single-user 2-core  perpetual
+Serial number: 501706328764
+  Licensed to: Miklos Koren
+               CEU MicroData
+
+Notes:
+      1. Stata is running in batch mode.
+      2. Unicode is supported; see help unicode_advice.
+      3. More than 2 billion observations are allowed; see help obs_advice.
+      4. Maximum number of variables is set to 5,000; see help set_maxvar.
+
+. do ../code/estimate/correlations.do 
+
+. here
+/Users/koren/Tresorit/projects/expat-dyadic/
+
+. local here = r(here)
+
+. 
+. use "`here'/temp/analysis_sample_dyadic.dta"
+
+. keep frame_id_numeric year country export manager time_foreign owner_spell te
+> aor08_2d  
+
+. drop if country=="XX"
+(132,392 observations deleted)
+
+. egen cc = group(country)
+
+. 
+. egen byte acquired_in_sample = max(time_foreign == 0), by(frame_id_numeric )
+
+. tabulate acquired_in_sample 
+
+acquired_in |
+    _sample |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |  2,780,088       87.50       87.50
+          1 |    397,320       12.50      100.00
+------------+-----------------------------------
+      Total |  3,177,408      100.00
+
+. keep if acquired_in_sample 
+(2,780,088 observations deleted)
+
+. drop acquired_in_sample 
+
+. egen byte acquired_in_sample = max(time_foreign <= -1), by(frame_id_numeric )
+
+. tabulate acquired_in_sample 
+
+acquired_in |
+    _sample |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |    260,688       65.61       65.61
+          1 |    136,632       34.39      100.00
+------------+-----------------------------------
+      Total |    397,320      100.00
+
+. keep if acquired_in_sample 
+(260,688 observations deleted)
+
+. drop acquired_in_sample 
+
+. 
+. egen export_before = max(export & time_foreign < 0), by(frame_id_numeric coun
+> try)
+
+. 
+. tabulate export_before export
+
+export_bef |     (max) export
+       ore |         0          1 |     Total
+-----------+----------------------+----------
+         0 |   118,312      2,630 |   120,942 
+         1 |     7,944      7,746 |    15,690 
+-----------+----------------------+----------
+     Total |   126,256     10,376 |   136,632 
+
+. 
+. tabulate manager export if time_foreign > 0 & !missing(time_foreign ), row
+
++----------------+
+| Key            |
+|----------------|
+|   frequency    |
+| row percentage |
++----------------+
+
+           |     (max) export
+   manager |         0          1 |     Total
+-----------+----------------------+----------
+         0 |    53,078      4,913 |    57,991 
+           |     91.53       8.47 |    100.00 
+-----------+----------------------+----------
+         1 |       461        348 |       809 
+           |     56.98      43.02 |    100.00 
+-----------+----------------------+----------
+     Total |    53,539      5,261 |    58,800 
+           |     91.05       8.95 |    100.00 
+
+. tabulate manager export if !export_before & time_foreign > 0 & !missing(time_
+> foreign ), row
+
++----------------+
+| Key            |
+|----------------|
+|   frequency    |
+| row percentage |
++----------------+
+
+           |     (max) export
+   manager |         0          1 |     Total
+-----------+----------------------+----------
+         0 |    49,646      2,226 |    51,872 
+           |     95.71       4.29 |    100.00 
+-----------+----------------------+----------
+         1 |       350        117 |       467 
+           |     74.95      25.05 |    100.00 
+-----------+----------------------+----------
+     Total |    49,996      2,343 |    52,339 
+           |     95.52       4.48 |    100.00 
+
+. 
+. reghdfe export manager export_before if time_foreign > 0 & !missing(time_fore
+> ign ), a(teaor08_2d##year cc##year) cluster(frame_id_numeric )
+(MWFE estimator converged in 2 iterations)
+
+HDFE Linear regression                            Number of obs   =     58,800
+Absorbing 2 HDFE groups                           F(   2,    612) =     105.93
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.2652
+                                                  Adj R-squared   =     0.2566
+                                                  Within R-sq.    =     0.1294
+Number of clusters (frame_id_numeric) =        613Root MSE        =     0.2461
+
+                     (Std. err. adjusted for 613 clusters in frame_id_numeric)
+------------------------------------------------------------------------------
+             |               Robust
+      export | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+     manager |   .1985952   .0299257     6.64   0.000     .1398256    .2573648
+export_bef~e |    .323253    .028697    11.26   0.000     .2668966    .3796095
+       _cons |   .0512211   .0039861    12.85   0.000     .0433931    .0590491
+------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------------+
+       Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------------+---------------------------------------|
+   teaor08_2d#year |       452           0         452     |
+           cc#year |       240          10         230     |
+-----------------------------------------------------------+
+
+. reghdfe export manager if !export_before & time_foreign > 0 & !missing(time_f
+> oreign ), a(teaor08_2d##year cc##year) cluster(frame_id_numeric )
+(MWFE estimator converged in 4 iterations)
+
+HDFE Linear regression                            Number of obs   =     52,339
+Absorbing 2 HDFE groups                           F(   1,    608) =      22.54
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.0797
+                                                  Adj R-squared   =     0.0676
+                                                  Within R-sq.    =     0.0071
+Number of clusters (frame_id_numeric) =        609Root MSE        =     0.1997
+
+                     (Std. err. adjusted for 609 clusters in frame_id_numeric)
+------------------------------------------------------------------------------
+             |               Robust
+      export | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+     manager |   .1829493   .0385324     4.75   0.000     .1072766    .2586221
+       _cons |   .0431335   .0034395    12.54   0.000     .0363787    .0498883
+------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------------+
+       Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------------+---------------------------------------|
+   teaor08_2d#year |       448           0         448     |
+           cc#year |       240          10         230     |
+-----------------------------------------------------------+
+
+. 
+. reghdfe export manager export_before if time_foreign > 0 & !missing(time_fore
+> ign ), a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
+(MWFE estimator converged in 2 iterations)
+
+HDFE Linear regression                            Number of obs   =     58,800
+Absorbing 2 HDFE groups                           F(   2,    612) =     130.37
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.4139
+                                                  Adj R-squared   =     0.3858
+                                                  Within R-sq.    =     0.0682
+Number of clusters (frame_id_numeric) =        613Root MSE        =     0.2237
+
+                     (Std. err. adjusted for 613 clusters in frame_id_numeric)
+------------------------------------------------------------------------------
+             |               Robust
+      export | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+     manager |   .1996628   .0293105     6.81   0.000     .1421015    .2572241
+export_bef~e |   .2281058   .0167038    13.66   0.000     .1953021    .2609095
+       _cons |   .0616612   .0018285    33.72   0.000     .0580704    .0652521
+------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------------------+
+             Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------------------+---------------------------------------|
+   frame_id_numeric#year |      2450        2450           0    *|
+                 cc#year |       240           1         239     |
+-----------------------------------------------------------------+
+* = FE nested within cluster; treated as redundant for DoF computation
+
+. reghdfe export manager if !export_before & time_foreign > 0 & !missing(time_f
+> oreign ), a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
+(dropped 11 singleton observations)
+(MWFE estimator converged in 5 iterations)
+
+HDFE Linear regression                            Number of obs   =     52,328
+Absorbing 2 HDFE groups                           F(   1,    606) =      20.53
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.2424
+                                                  Adj R-squared   =     0.2017
+                                                  Within R-sq.    =     0.0070
+Number of clusters (frame_id_numeric) =        607Root MSE        =     0.1847
+
+                     (Std. err. adjusted for 607 clusters in frame_id_numeric)
+------------------------------------------------------------------------------
+             |               Robust
+      export | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+     manager |   .1676677   .0370089     4.53   0.000     .0949864    .2403491
+       _cons |   .0432407   .0003303   130.92   0.000     .0425921    .0438893
+------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------------------+
+             Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------------------+---------------------------------------|
+   frame_id_numeric#year |      2426        2426           0    *|
+                 cc#year |       240           1         239     |
+-----------------------------------------------------------------+
+* = FE nested within cluster; treated as redundant for DoF computation
+
+. 
+end of do-file
