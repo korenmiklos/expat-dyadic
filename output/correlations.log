@@ -31,8 +31,8 @@ Notes:
 . 
 . use "`here'/temp/analysis_sample_dyadic.dta"
 
-. keep frame_id_numeric year country export manager owner time_foreign teaor08_
-> 2d  
+. keep frame_id_numeric year country export import manager owner time_foreign t
+> eaor08_2d  
 
 . drop if country=="XX"
 (132,392 observations deleted)
@@ -75,11 +75,17 @@ acquired_in |
 . drop acquired_in_sample 
 
 . 
-. egen export_before = max(export & time_foreign < 0), by(frame_id_numeric coun
-> try)
-
-. 
-. tabulate export_before export
+. foreach X in export import {
+  2.     egen `X'_before = max(`X' & time_foreign < 0), by(frame_id_numeric cou
+> ntry)
+  3.     tabulate `X'_before `X'
+  4. 
+.     reghdfe `X' manager owner `X'_before if time_foreign > 0 & !missing(time_
+> foreign ), a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
+  5.     reghdfe `X' manager owner if !`X'_before & time_foreign > 0 & !missing
+> (time_foreign ), a(frame_id_numeric##year cc##year) cluster(frame_id_numeric 
+> )
+  6. }
 
 export_bef |     (max) export
        ore |         0          1 |     Total
@@ -88,6 +94,130 @@ export_bef |     (max) export
          1 |     7,944      7,746 |    15,690 
 -----------+----------------------+----------
      Total |   126,256     10,376 |   136,632 
+(MWFE estimator converged in 2 iterations)
+
+HDFE Linear regression                            Number of obs   =     58,800
+Absorbing 2 HDFE groups                           F(   3,    612) =     103.83
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.4179
+                                                  Adj R-squared   =     0.3900
+                                                  Within R-sq.    =     0.0746
+Number of clusters (frame_id_numeric) =        613Root MSE        =     0.2229
+
+                     (Std. err. adjusted for 613 clusters in frame_id_numeric)
+------------------------------------------------------------------------------
+             |               Robust
+      export | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+     manager |   .1252899   .0305909     4.10   0.000     .0652141    .1853657
+       owner |   .1411375   .0206497     6.83   0.000     .1005846    .1816904
+export_bef~e |   .2240169   .0166579    13.45   0.000     .1913034    .2567304
+       _cons |   .0598406   .0018308    32.69   0.000     .0562452     .063436
+------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------------------+
+             Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------------------+---------------------------------------|
+   frame_id_numeric#year |      2450        2450           0    *|
+                 cc#year |       240           1         239     |
+-----------------------------------------------------------------+
+* = FE nested within cluster; treated as redundant for DoF computation
+(dropped 11 singleton observations)
+(MWFE estimator converged in 5 iterations)
+
+HDFE Linear regression                            Number of obs   =     52,328
+Absorbing 2 HDFE groups                           F(   2,    606) =      16.08
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.2446
+                                                  Adj R-squared   =     0.2040
+                                                  Within R-sq.    =     0.0098
+Number of clusters (frame_id_numeric) =        607Root MSE        =     0.1844
+
+                     (Std. err. adjusted for 607 clusters in frame_id_numeric)
+------------------------------------------------------------------------------
+             |               Robust
+      export | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+     manager |   .1198145   .0384494     3.12   0.002     .0443043    .1953247
+       owner |   .0862939   .0228366     3.78   0.000     .0414453    .1311425
+       _cons |    .042205   .0004465    94.53   0.000     .0413282    .0430819
+------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------------------+
+             Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------------------+---------------------------------------|
+   frame_id_numeric#year |      2426        2426           0    *|
+                 cc#year |       240           1         239     |
+-----------------------------------------------------------------+
+* = FE nested within cluster; treated as redundant for DoF computation
+
+import_bef |     (max) import
+       ore |         0          1 |     Total
+-----------+----------------------+----------
+         0 |   111,015      4,045 |   115,060 
+         1 |    10,263     11,309 |    21,572 
+-----------+----------------------+----------
+     Total |   121,278     15,354 |   136,632 
+(MWFE estimator converged in 2 iterations)
+
+HDFE Linear regression                            Number of obs   =     58,800
+Absorbing 2 HDFE groups                           F(   3,    612) =     240.78
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.4301
+                                                  Adj R-squared   =     0.4027
+                                                  Within R-sq.    =     0.0967
+Number of clusters (frame_id_numeric) =        613Root MSE        =     0.2670
+
+                     (Std. err. adjusted for 613 clusters in frame_id_numeric)
+------------------------------------------------------------------------------
+             |               Robust
+      import | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+     manager |   .1878009   .0274671     6.84   0.000     .1338598    .2417421
+       owner |   .1322325   .0190701     6.93   0.000     .0947817    .1696833
+import_bef~e |   .2706327   .0139748    19.37   0.000     .2431884     .298077
+       _cons |   .0916547    .002047    44.77   0.000     .0876346    .0956747
+------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------------------+
+             Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------------------+---------------------------------------|
+   frame_id_numeric#year |      2450        2450           0    *|
+                 cc#year |       240           1         239     |
+-----------------------------------------------------------------+
+* = FE nested within cluster; treated as redundant for DoF computation
+(dropped 13 singleton observations)
+(MWFE estimator converged in 5 iterations)
+
+HDFE Linear regression                            Number of obs   =     49,840
+Absorbing 2 HDFE groups                           F(   2,    608) =      25.96
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.2808
+                                                  Adj R-squared   =     0.2401
+                                                  Within R-sq.    =     0.0104
+Number of clusters (frame_id_numeric) =        609Root MSE        =     0.2242
+
+                     (Std. err. adjusted for 609 clusters in frame_id_numeric)
+------------------------------------------------------------------------------
+             |               Robust
+      import | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+     manager |    .238283    .043155     5.52   0.000     .1535322    .3230339
+       owner |   .0694836   .0232751     2.99   0.003     .0237742    .1151929
+       _cons |    .068766   .0003506   196.12   0.000     .0680774    .0694546
+------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------------------+
+             Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------------------+---------------------------------------|
+   frame_id_numeric#year |      2433        2433           0    *|
+                 cc#year |       240           1         239     |
+-----------------------------------------------------------------+
+* = FE nested within cluster; treated as redundant for DoF computation
 
 . 
 . tabulate manager export if time_foreign > 0 & !missing(time_foreign ), row
@@ -132,71 +262,6 @@ export_bef |     (max) export
 -----------+----------------------+----------
      Total |    49,996      2,343 |    52,339 
            |     95.52       4.48 |    100.00 
-
-. 
-. reghdfe export manager owner export_before if time_foreign > 0 & !missing(tim
-> e_foreign ), a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
-(MWFE estimator converged in 2 iterations)
-
-HDFE Linear regression                            Number of obs   =     58,800
-Absorbing 2 HDFE groups                           F(   3,    612) =     103.83
-Statistics robust to heteroskedasticity           Prob > F        =     0.0000
-                                                  R-squared       =     0.4179
-                                                  Adj R-squared   =     0.3900
-                                                  Within R-sq.    =     0.0746
-Number of clusters (frame_id_numeric) =        613Root MSE        =     0.2229
-
-                     (Std. err. adjusted for 613 clusters in frame_id_numeric)
-------------------------------------------------------------------------------
-             |               Robust
-      export | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
--------------+----------------------------------------------------------------
-     manager |   .1252899   .0305909     4.10   0.000     .0652141    .1853657
-       owner |   .1411375   .0206497     6.83   0.000     .1005846    .1816904
-export_bef~e |   .2240169   .0166579    13.45   0.000     .1913034    .2567304
-       _cons |   .0598406   .0018308    32.69   0.000     .0562452     .063436
-------------------------------------------------------------------------------
-
-Absorbed degrees of freedom:
------------------------------------------------------------------+
-             Absorbed FE | Categories  - Redundant  = Num. Coefs |
--------------------------+---------------------------------------|
-   frame_id_numeric#year |      2450        2450           0    *|
-                 cc#year |       240           1         239     |
------------------------------------------------------------------+
-* = FE nested within cluster; treated as redundant for DoF computation
-
-. reghdfe export manager owner if !export_before & time_foreign > 0 & !missing(
-> time_foreign ), a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
-(dropped 11 singleton observations)
-(MWFE estimator converged in 5 iterations)
-
-HDFE Linear regression                            Number of obs   =     52,328
-Absorbing 2 HDFE groups                           F(   2,    606) =      16.08
-Statistics robust to heteroskedasticity           Prob > F        =     0.0000
-                                                  R-squared       =     0.2446
-                                                  Adj R-squared   =     0.2040
-                                                  Within R-sq.    =     0.0098
-Number of clusters (frame_id_numeric) =        607Root MSE        =     0.1844
-
-                     (Std. err. adjusted for 607 clusters in frame_id_numeric)
-------------------------------------------------------------------------------
-             |               Robust
-      export | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
--------------+----------------------------------------------------------------
-     manager |   .1198145   .0384494     3.12   0.002     .0443043    .1953247
-       owner |   .0862939   .0228366     3.78   0.000     .0414453    .1311425
-       _cons |    .042205   .0004465    94.53   0.000     .0413282    .0430819
-------------------------------------------------------------------------------
-
-Absorbed degrees of freedom:
------------------------------------------------------------------+
-             Absorbed FE | Categories  - Redundant  = Num. Coefs |
--------------------------+---------------------------------------|
-   frame_id_numeric#year |      2426        2426           0    *|
-                 cc#year |       240           1         239     |
------------------------------------------------------------------+
-* = FE nested within cluster; treated as redundant for DoF computation
 
 . 
 end of do-file
