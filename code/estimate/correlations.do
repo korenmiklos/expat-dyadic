@@ -2,8 +2,9 @@ here
 local here = r(here)
 
 use "`here'/temp/analysis_sample_dyadic.dta"
-keep frame_id_numeric year country export import manager owner time_foreign teaor08_2d  
+keep frame_id_numeric year country export import manager* owner* time_foreign teaor08_2d  
 drop if country=="XX"
+drop *distance
 egen cc = group(country)
 
 egen byte acquired_in_sample = max(time_foreign == 0), by(frame_id_numeric )
@@ -29,3 +30,9 @@ foreach X in export import {
 
 tabulate manager export if `timing', row
 tabulate manager export if !export_before & `timing', row
+
+foreach X in export import {
+    reghdfe `X' manager* owner* `X'_before if `timing', a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
+    reghdfe `X' manager* owner* if !`X'_before & `timing', a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
+    reghdfe `X' manager* owner* if !`X'_anywhere_before & `timing', a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
+}
