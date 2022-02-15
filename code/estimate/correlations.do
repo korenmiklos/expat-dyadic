@@ -2,7 +2,7 @@ here
 local here = r(here)
 
 use "`here'/temp/analysis_sample_dyadic.dta"
-keep frame_id_numeric year country export manager time_foreign owner_spell teaor08_2d  
+keep frame_id_numeric year country export manager owner time_foreign teaor08_2d  
 drop if country=="XX"
 egen cc = group(country)
 
@@ -22,5 +22,5 @@ tabulate export_before export
 tabulate manager export if time_foreign > 0 & !missing(time_foreign ), row
 tabulate manager export if !export_before & time_foreign > 0 & !missing(time_foreign ), row
 
-reghdfe export manager export_before if time_foreign > 0 & !missing(time_foreign ), a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
-reghdfe export manager if !export_before & time_foreign > 0 & !missing(time_foreign ), a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
+reghdfe export manager owner export_before if time_foreign > 0 & !missing(time_foreign ), a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
+reghdfe export manager owner if !export_before & time_foreign > 0 & !missing(time_foreign ), a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
