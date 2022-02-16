@@ -35,3 +35,10 @@ foreach X in export import {
     reghdfe `X' manager* language owner*  if !`X'_before & `timing', a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
     reghdfe `X' manager* language owner*  if !`X'_anywhere_before & `timing', a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
 }
+
+* selection into expat management
+reghdfe owner export_before if `timing', a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
+reghdfe manager export_before if `timing', a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
+reghdfe manager owner export_before if `timing', a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
+reghdfe manager owner import_before if `timing', a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
+
