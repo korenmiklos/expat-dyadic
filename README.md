@@ -1,32 +1,97 @@
-# Analysis for Koren, Miklós and Álmos Telegdy, "Expatriate Managers and Firm Performance."
 
-Requires confidential micro data to be placed in the `input` folder, like so:
-```
-input/balance-small/balance-sheet-1992-2016-small.dta
-input/manager_position/pos5.csv
-input/motherlode/branch.csv
-input/motherlode/hq.csv
-input/motherlode/manage.csv
-input/motherlode/own.csv
-input/motherlode/site.csv
-```
+# Replication Package for: Foreign Managers Help Firms Access Foreign Markets
+## 2022-02-16
 
-Then run `make install` to install the [beautiful 538 graph schemes](https://danbischof.com/2017/09/05/a-final-stata-gift-538-schemes/). After that, `make` does all the data cleaning and runs all the analysis, like so:
-```Makefile
-STATA = stata -b do
-output/estimate.log: temp/analysis_sample.dta estimate.do event_study.do regram.do
-	$(STATA) estimate
-temp/analysis_sample.dta: input/balance-small/balance-sheet-1992-2016-small.dta temp/firm_ceo_panel.dta variables.do
-	$(STATA) variables
-temp/firm_ceo_panel.dta: temp/manager_panel.dta firm_panel.do fill_in_ceo.do
-	$(STATA) firm_panel
-temp/manager_panel.dta: temp/managers.dta temp/positions.dta manager_panel.do 
-	$(STATA) manager_panel
-temp/managers.dta temp/positions.dta: input/manager_position/pos5.csv input/motherlode/manage.csv read_data.do
-	$(STATA) read_data
-install:
-	stata -b ssc install g538schemes, replace all
-```
-Intermediate files after data cleaning, sample and variable definition etc are stored in the `temp` folder.
+This repository accompanies Koren, Orbán and Telegdy, 2022. "Foreign Managers Help Firms Access Foreign Markets." Working paper.
 
-Regression output is save as "regression grammar," see `regram.do` (at some point I will document this as a package). Regressions are saved into tables, columns and rows within columns. Each cell has a point estimate, standard deviation, t-stat and p-value saved in [YAML](https://en.wikipedia.org/wiki/YAML) format. Just see `output/regression/baseline_intensity/columns/exporter.yaml`, for example. Having these numbers, you can create the table you want in the format you want.
+## Authors
+
+- [Koren, Miklós](https://koren.mk/)
+- Orbán, Krisztina
+- Telegdy, Álmos
+
+# Data availability and provenance statements
+### Statement about rights
+
+The author(s) of the manuscript have legitimate access to and permission to use the data used in this manuscript.
+
+### Summary of availability
+Some data **cannot be made** publicly available.
+
+### Details on each data source
+
+The paper uses the Hungarian Manager Database (CEU MicroData 2020a), Customs Statistics ()
+
+
+- Hungarian Manager Database (CEU MicroData 2020a) is produced from data published by Opten. To access the data for replication or other academic research, contact the data manager at CEU MicroData, András Vereckei (andras.vereckei@gmail.com). After verification of the data request, researchers have to sign a data agreement to get access to the data. The process takes about two weeks. There is no fee involved and you can access the data remotely.
+- Mérleg- és Eredménykimutatások (CEU MicroData 2020b) is produced from data published by Opten. To access the data for replication or other academic research, contact the data manager at CEU MicroData, András Vereckei (andras.vereckei@gmail.com). After verification of the data request, researchers have to sign a data agreement to get access to the data. The process takes about two weeks. There is no fee involved and you can access the data remotely.
+- Customs Statistics () is published by XXX and accessible on the premises of the [Centre for Economics and Regional Studies](https://adatbank.krtk.mta.hu/en/) in Budapest.
+
+# Description of programs/code
+
+The entire data cleaning and analysis can be executed with `make`. See the `Makefile` in the root of the folder.
+
+### (Optional, but recommended) License for Code
+
+The code is licensed under a MIT/BSD/GPL/Creative Commons license. See [LICENSE.txt](LICENSE.txt) for details.
+
+
+# Computational requirements
+
+### Software requirements
+
+<!---
+List all of the software requirements, up to and including any operating system requirements, for the entire set of code. It is suggested to distribute most dependencies together with the replication package if allowed, in particular if sourced from unversioned code repositories, Github repos, and personal webpages. In all cases, list the version *you* used. 
+-->
+
+- Stata (code was last run with version 17)
+  - `here` (can be installed with `net install here, from("https://raw.githubusercontent.com/korenmiklos/here/master/")`)
+  - `reghdfe` (can be installed with `ssc install reghdfe`)
+- GNU Make
+
+### Memory and runtime requirements
+Creating the data extract (`temp/analysis_sample_dyadic.dta`) takes about 15 minutes on a quad-core 3.8GHz machine with 8GB of memory. Each estimation runs in a few minutes.
+
+#### Summary
+
+Approximate time needed to reproduce the analyses on a standard (2020) desktop machine: 30 minutes.
+
+
+# List of tables and figures
+
+<!---
+Your programs should clearly identify the tables and figures as they appear in the manuscript, by number. Sometimes, this may be obvious, e.g. a program called "`table1.do`" generates a file called `table1.png`. Sometimes, mnemonics are used, and a mapping is necessary. In all circumstances, provide a list of tables and figures, identifying the program (and possibly the line number) where a figure is created.
+
+If the public repository is incomplete, because not all data can be provided, as described in the data section, then the list of tables should clearly indicate which tables, figures, and in-text numbers can be reproduced with the public material provided.
+-->
+
+The provided code reproduces:
+<!---
+pick one
+-->
+- All numbers provided in text in the paper
+- All tables and figures in the paper
+- Selected tables and figures in the paper, as explained and justified below.
+
+
+| Figure/Table #    | Program                  | Line Number | Output file                      | Note                            |
+|-------------------|--------------------------|-------------|----------------------------------|---------------------------------|
+| Table 1           | 02_analysis/table1.do    |             | summarystats.csv                 ||
+| Table 2           | 02_analysis/table2and3.do| 15          | table2.csv                       ||
+| Table 3           | 02_analysis/table2and3.do| 145         | table3.csv                       ||
+| Figure 1          | n.a. (no data)           |             |                                  | Source: Herodus (2011)          |
+| Figure 2          | 02_analysis/fig2.do      |             | figure2.png                      ||
+| Figure 3          | 02_analysis/fig3.do      |             | figure-robustness.png            | Requires confidential data      |
+
+
+# References
+
+<!---
+As in any scientific manuscript, you should have proper references. For instance, in this sample README, we cited "Ruggles et al, 2019" and "DESE, 2019" in a Data Availability Statement. The reference should thus be listed here, in the style of your journal.
+-->
+
+- Steven Ruggles, Steven M. Manson, Tracy A. Kugler, David A. Haynes II, David C. Van Riper, and Maryia Bakhtsiyarava. 2018. "IPUMS Terra: Integrated Data on Population and Environment: Version 2 [dataset]." Minneapolis, MN: *Minnesota Population Center, IPUMS*. https://doi.org/10.18128/D090.V2
+- Department of Elementary and Secondary Education (DESE), 2019. "Student outcomes database [dataset]" *Massachusetts Department of Elementary and Secondary Education (DESE)*. Accessed January 15, 2019.
+- U.S. Bureau of Economic Analysis (BEA). 2016. “Table 30: "Economic Profile by County, 1969-2016.” (accessed Sept 1, 2017).
+- Inglehart, R., C. Haerpfer, A. Moreno, C. Welzel, K. Kizilova, J. Diez-Medrano, M. Lagos, P. Norris, E. Ponarin & B. Puranen et al. (eds.). 2014. World Values Survey: Round Six - Country-Pooled Datafile Version: http://www.worldvaluessurvey.org/WVSDocumentationWV6.jsp. Madrid: JD Systems Institute.
+
