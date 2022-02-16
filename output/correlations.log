@@ -31,13 +31,11 @@ Notes:
 . 
 . use "`here'/temp/analysis_sample_dyadic.dta"
 
-. keep frame_id_numeric year country export import manager* owner* time_foreign
->  teaor08_2d  
+. keep frame_id_numeric year country export import manager manager_comlang owne
+> r owner_comlang time_foreign teaor08_2d  
 
 . drop if country=="XX"
 (132,392 observations deleted)
-
-. drop *distance
 
 . egen cc = group(country)
 
@@ -335,271 +333,187 @@ Absorbed degrees of freedom:
   4.     reghdfe `X' manager* owner* if !`X'_anywhere_before & `timing', a(fram
 > e_id_numeric##year cc##year) cluster(frame_id_numeric )
   5. }
-note: owner_spell is probably collinear with the fixed effects (all partialled-
-> out values are close to zero; tol = 1.0e-09)
-note: owner_spell_total is probably collinear with the fixed effects (all parti
-> alled-out values are close to zero; tol = 1.0e-09)
-note: owner_org is probably collinear with the fixed effects (all partialled-ou
-> t values are close to zero; tol = 1.0e-09)
 (MWFE estimator converged in 2 iterations)
-note: owner_spell omitted because of collinearity
-note: owner_spell_total omitted because of collinearity
-note: owner_org omitted because of collinearity
 
-HDFE Linear regression                            Number of obs   =     40,440
-Absorbing 2 HDFE groups                           F(   7,    404) =      44.90
+HDFE Linear regression                            Number of obs   =     76,296
+Absorbing 2 HDFE groups                           F(   5,    728) =      84.85
 Statistics robust to heteroskedasticity           Prob > F        =     0.0000
-                                                  R-squared       =     0.3976
-                                                  Adj R-squared   =     0.3670
-                                                  Within R-sq.    =     0.0947
-Number of clusters (frame_id_numeric) =        405Root MSE        =     0.2209
+                                                  R-squared       =     0.4272
+                                                  Adj R-squared   =     0.4001
+                                                  Within R-sq.    =     0.0906
+Number of clusters (frame_id_numeric) =        729Root MSE        =     0.2153
 
-                     (Std. err. adjusted for 405 clusters in frame_id_numeric)
+                     (Std. err. adjusted for 729 clusters in frame_id_numeric)
 ------------------------------------------------------------------------------
              |               Robust
       export | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-     manager |   .0952873    .030645     3.11   0.002     .0350438    .1555308
-manager_c~ig |   .0054215   .0101588     0.53   0.594    -.0145492    .0253922
-manager_c~ng |  -.0206715   .0139785    -1.48   0.140    -.0481512    .0068082
-       owner |   .1463559   .0198708     7.37   0.000     .1072927     .185419
-owner_contig |  -.0119258   .0088435    -1.35   0.178    -.0293109    .0054593
-owner_coml~g |   .0232156   .0113792     2.04   0.042     .0008458    .0455853
- owner_spell |          0  (omitted)
-owner_spe~al |          0  (omitted)
-   owner_org |          0  (omitted)
-export_bef~e |   .2485423   .0199123    12.48   0.000     .2093978    .2876869
-       _cons |   .0522983   .0024834    21.06   0.000     .0474162    .0571803
+     manager |   .1146063   .0274011     4.18   0.000     .0608117     .168401
+manager_co~g |  -.0178092   .0115176    -1.55   0.122    -.0404208    .0048025
+       owner |   .1449699   .0192902     7.52   0.000     .1070988     .182841
+owner_coml~g |   .0152531   .0093452     1.63   0.103    -.0030936    .0335998
+export_bef~e |   .2495719   .0153684    16.24   0.000     .2194002    .2797436
+       _cons |   .0523064    .001746    29.96   0.000     .0488786    .0557343
 ------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
 -----------------------------------------------------------------+
              Absorbed FE | Categories  - Redundant  = Num. Coefs |
 -------------------------+---------------------------------------|
-   frame_id_numeric#year |      1685        1685           0    *|
+   frame_id_numeric#year |      3179        3179           0    *|
                  cc#year |       264           1         263     |
 -----------------------------------------------------------------+
 * = FE nested within cluster; treated as redundant for DoF computation
-(dropped 1 singleton observations)
-note: owner_spell is probably collinear with the fixed effects (all partialled-
-> out values are close to zero; tol = 1.0e-09)
-note: owner_spell_total is probably collinear with the fixed effects (all parti
-> alled-out values are close to zero; tol = 1.0e-09)
-note: owner_org is probably collinear with the fixed effects (all partialled-ou
-> t values are close to zero; tol = 1.0e-09)
+(dropped 13 singleton observations)
 (MWFE estimator converged in 5 iterations)
-note: owner_spell omitted because of collinearity
-note: owner_spell_total omitted because of collinearity
-note: owner_org omitted because of collinearity
 
-HDFE Linear regression                            Number of obs   =     36,420
-Absorbing 2 HDFE groups                           F(   6,    402) =       7.36
+HDFE Linear regression                            Number of obs   =     67,965
+Absorbing 2 HDFE groups                           F(   4,    722) =      10.52
 Statistics robust to heteroskedasticity           Prob > F        =     0.0000
-                                                  R-squared       =     0.2221
-                                                  Adj R-squared   =     0.1781
-                                                  Within R-sq.    =     0.0120
-Number of clusters (frame_id_numeric) =        403Root MSE        =     0.1851
+                                                  R-squared       =     0.2348
+                                                  Adj R-squared   =     0.1944
+                                                  Within R-sq.    =     0.0098
+Number of clusters (frame_id_numeric) =        723Root MSE        =     0.1731
 
-                     (Std. err. adjusted for 403 clusters in frame_id_numeric)
+                     (Std. err. adjusted for 723 clusters in frame_id_numeric)
 ------------------------------------------------------------------------------
              |               Robust
       export | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-     manager |    .088784    .035288     2.52   0.012     .0194119    .1581561
-manager_c~ig |  -.0066244   .0075482    -0.88   0.381    -.0214633    .0082145
-manager_c~ng |  -.0188385   .0129173    -1.46   0.146    -.0442325    .0065554
-       owner |   .0871037   .0207137     4.21   0.000      .046383    .1278244
-owner_contig |   .0016488   .0064311     0.26   0.798    -.0109939    .0142915
-owner_coml~g |   .0179264     .01032     1.74   0.083    -.0023616    .0382144
- owner_spell |          0  (omitted)
-owner_spe~al |          0  (omitted)
-   owner_org |          0  (omitted)
-       _cons |   .0392979   .0014696    26.74   0.000     .0364089    .0421869
+     manager |   .1010315   .0327239     3.09   0.002     .0367862    .1652768
+manager_co~g |  -.0230605   .0110056    -2.10   0.036    -.0446674   -.0014537
+       owner |   .0902061   .0205686     4.39   0.000     .0498247    .1305875
+owner_coml~g |   .0200522   .0084212     2.38   0.018     .0035192    .0365852
+       _cons |   .0360554   .0006406    56.28   0.000     .0347977     .037313
 ------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
 -----------------------------------------------------------------+
              Absorbed FE | Categories  - Redundant  = Num. Coefs |
 -------------------------+---------------------------------------|
-   frame_id_numeric#year |      1683        1683           0    *|
+   frame_id_numeric#year |      3149        3149           0    *|
                  cc#year |       264           1         263     |
 -----------------------------------------------------------------+
 * = FE nested within cluster; treated as redundant for DoF computation
-note: owner_spell is probably collinear with the fixed effects (all partialled-
-> out values are close to zero; tol = 1.0e-09)
-note: owner_spell_total is probably collinear with the fixed effects (all parti
-> alled-out values are close to zero; tol = 1.0e-09)
-note: owner_org is probably collinear with the fixed effects (all partialled-ou
-> t values are close to zero; tol = 1.0e-09)
 (MWFE estimator converged in 2 iterations)
-note: owner_spell omitted because of collinearity
-note: owner_spell_total omitted because of collinearity
-note: owner_org omitted because of collinearity
 
-HDFE Linear regression                            Number of obs   =     16,656
-Absorbing 2 HDFE groups                           F(   6,    177) =       4.72
-Statistics robust to heteroskedasticity           Prob > F        =     0.0002
-                                                  R-squared       =     0.2462
-                                                  Adj R-squared   =     0.2000
-                                                  Within R-sq.    =     0.0220
-Number of clusters (frame_id_numeric) =        178Root MSE        =     0.1386
+HDFE Linear regression                            Number of obs   =     34,776
+Absorbing 2 HDFE groups                           F(   4,    351) =       6.79
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.2423
+                                                  Adj R-squared   =     0.2030
+                                                  Within R-sq.    =     0.0181
+Number of clusters (frame_id_numeric) =        352Root MSE        =     0.1197
 
-                     (Std. err. adjusted for 178 clusters in frame_id_numeric)
+                     (Std. err. adjusted for 352 clusters in frame_id_numeric)
 ------------------------------------------------------------------------------
              |               Robust
       export | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-     manager |   .0908461   .0424149     2.14   0.034     .0071422      .17455
-manager_c~ig |  -.0047576   .0082032    -0.58   0.563    -.0209463    .0114312
-manager_c~ng |  -.0221995   .0176623    -1.26   0.210    -.0570554    .0126563
-       owner |   .0590662    .021706     2.72   0.007     .0162303    .1019021
-owner_contig |   .0016207   .0096087     0.17   0.866    -.0173417     .020583
-owner_coml~g |   .0017555   .0113424     0.15   0.877    -.0206282    .0241392
- owner_spell |          0  (omitted)
-owner_spe~al |          0  (omitted)
-   owner_org |          0  (omitted)
-       _cons |   .0216608   .0015268    14.19   0.000     .0186477    .0246739
+     manager |     .08363   .0340032     2.46   0.014     .0167543    .1505057
+manager_co~g |  -.0196895   .0134591    -1.46   0.144    -.0461602    .0067811
+       owner |   .0758002   .0229173     3.31   0.001     .0307277    .1208727
+owner_coml~g |   .0087198   .0067623     1.29   0.198    -.0045799    .0220196
+       _cons |    .016085   .0007421    21.68   0.000     .0146255    .0175444
 ------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
 -----------------------------------------------------------------+
              Absorbed FE | Categories  - Redundant  = Num. Coefs |
 -------------------------+---------------------------------------|
-   frame_id_numeric#year |       694         694           0    *|
+   frame_id_numeric#year |      1449        1449           0    *|
                  cc#year |       264           1         263     |
 -----------------------------------------------------------------+
 * = FE nested within cluster; treated as redundant for DoF computation
-note: owner_spell is probably collinear with the fixed effects (all partialled-
-> out values are close to zero; tol = 1.0e-09)
-note: owner_spell_total is probably collinear with the fixed effects (all parti
-> alled-out values are close to zero; tol = 1.0e-09)
-note: owner_org is probably collinear with the fixed effects (all partialled-ou
-> t values are close to zero; tol = 1.0e-09)
 (MWFE estimator converged in 2 iterations)
-note: owner_spell omitted because of collinearity
-note: owner_spell_total omitted because of collinearity
-note: owner_org omitted because of collinearity
 
-HDFE Linear regression                            Number of obs   =     40,440
-Absorbing 2 HDFE groups                           F(   7,    404) =      96.16
+HDFE Linear regression                            Number of obs   =     76,296
+Absorbing 2 HDFE groups                           F(   5,    728) =     193.45
 Statistics robust to heteroskedasticity           Prob > F        =     0.0000
-                                                  R-squared       =     0.4242
-                                                  Adj R-squared   =     0.3949
-                                                  Within R-sq.    =     0.1131
-Number of clusters (frame_id_numeric) =        405Root MSE        =     0.2711
+                                                  R-squared       =     0.4331
+                                                  Adj R-squared   =     0.4063
+                                                  Within R-sq.    =     0.1133
+Number of clusters (frame_id_numeric) =        729Root MSE        =     0.2591
 
-                     (Std. err. adjusted for 405 clusters in frame_id_numeric)
+                     (Std. err. adjusted for 729 clusters in frame_id_numeric)
 ------------------------------------------------------------------------------
              |               Robust
       import | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-     manager |   .1786724   .0291701     6.13   0.000     .1213282    .2360166
-manager_c~ig |   .0130911   .0124279     1.05   0.293    -.0113403    .0375225
-manager_c~ng |   .0262002   .0154983     1.69   0.092    -.0042671    .0566676
-       owner |   .1297585   .0188434     6.89   0.000     .0927151    .1668019
-owner_contig |  -.0010118   .0095426    -0.11   0.916    -.0197711    .0177475
-owner_coml~g |   .0089893   .0130843     0.69   0.492    -.0167326    .0347112
- owner_spell |          0  (omitted)
-owner_spe~al |          0  (omitted)
-   owner_org |          0  (omitted)
-import_bef~e |    .299163   .0170796    17.52   0.000     .2655871    .3327389
-       _cons |   .0874125   .0030242    28.90   0.000     .0814673    .0933577
+     manager |   .1882902   .0254025     7.41   0.000     .1384193    .2381611
+manager_co~g |   .0385462   .0131732     2.93   0.004     .0126842    .0644083
+       owner |   .1415309   .0179149     7.90   0.000     .1063598     .176702
+owner_coml~g |   .0082895   .0099779     0.83   0.406    -.0112995    .0278785
+import_bef~e |   .2920667   .0128496    22.73   0.000       .26684    .3172933
+       _cons |   .0787359   .0019691    39.99   0.000     .0748701    .0826017
 ------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
 -----------------------------------------------------------------+
              Absorbed FE | Categories  - Redundant  = Num. Coefs |
 -------------------------+---------------------------------------|
-   frame_id_numeric#year |      1685        1685           0    *|
+   frame_id_numeric#year |      3179        3179           0    *|
                  cc#year |       264           1         263     |
 -----------------------------------------------------------------+
 * = FE nested within cluster; treated as redundant for DoF computation
-(dropped 1 singleton observations)
-note: owner_spell is probably collinear with the fixed effects (all partialled-
-> out values are close to zero; tol = 1.0e-09)
-note: owner_spell_total is probably collinear with the fixed effects (all parti
-> alled-out values are close to zero; tol = 1.0e-09)
-note: owner_org is probably collinear with the fixed effects (all partialled-ou
-> t values are close to zero; tol = 1.0e-09)
+(dropped 16 singleton observations)
 (MWFE estimator converged in 6 iterations)
-note: owner_spell omitted because of collinearity
-note: owner_spell_total omitted because of collinearity
-note: owner_org omitted because of collinearity
 
-HDFE Linear regression                            Number of obs   =     34,749
-Absorbing 2 HDFE groups                           F(   6,    402) =       8.28
+HDFE Linear regression                            Number of obs   =     64,834
+Absorbing 2 HDFE groups                           F(   4,    724) =      17.02
 Statistics robust to heteroskedasticity           Prob > F        =     0.0000
-                                                  R-squared       =     0.2738
-                                                  Adj R-squared   =     0.2307
-                                                  Within R-sq.    =     0.0121
-Number of clusters (frame_id_numeric) =        403Root MSE        =     0.2317
+                                                  R-squared       =     0.2686
+                                                  Adj R-squared   =     0.2278
+                                                  Within R-sq.    =     0.0119
+Number of clusters (frame_id_numeric) =        725Root MSE        =     0.2125
 
-                     (Std. err. adjusted for 403 clusters in frame_id_numeric)
+                     (Std. err. adjusted for 725 clusters in frame_id_numeric)
 ------------------------------------------------------------------------------
              |               Robust
       import | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-     manager |   .2221135   .0448475     4.95   0.000     .1339486    .3102784
-manager_c~ig |   .0135705   .0124456     1.09   0.276    -.0108962    .0380372
-manager_c~ng |   .0208723   .0166453     1.25   0.211    -.0118505     .053595
-       owner |    .064396   .0208896     3.08   0.002     .0233296    .1054624
-owner_contig |  -.0046416   .0093891    -0.49   0.621    -.0230994    .0138163
-owner_coml~g |   .0079951   .0126903     0.63   0.529    -.0169526    .0329428
- owner_spell |          0  (omitted)
-owner_spe~al |          0  (omitted)
-   owner_org |          0  (omitted)
-       _cons |   .0699924   .0019954    35.08   0.000     .0660697     .073915
+     manager |   .2385661   .0387306     6.16   0.000     .1625284    .3146037
+manager_co~g |   .0369249   .0137669     2.68   0.007     .0098971    .0639528
+       owner |   .0770787   .0212394     3.63   0.000     .0353805    .1187769
+owner_coml~g |   .0064023   .0098172     0.65   0.515    -.0128712    .0256758
+       _cons |   .0584086   .0007235    80.73   0.000     .0569881     .059829
 ------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
 -----------------------------------------------------------------+
              Absorbed FE | Categories  - Redundant  = Num. Coefs |
 -------------------------+---------------------------------------|
-   frame_id_numeric#year |      1680        1680           0    *|
+   frame_id_numeric#year |      3158        3158           0    *|
                  cc#year |       264           1         263     |
 -----------------------------------------------------------------+
 * = FE nested within cluster; treated as redundant for DoF computation
-note: owner_spell is probably collinear with the fixed effects (all partialled-
-> out values are close to zero; tol = 1.0e-09)
-note: owner_spell_total is probably collinear with the fixed effects (all parti
-> alled-out values are close to zero; tol = 1.0e-09)
-note: owner_org is probably collinear with the fixed effects (all partialled-ou
-> t values are close to zero; tol = 1.0e-09)
 (MWFE estimator converged in 2 iterations)
-note: owner_spell omitted because of collinearity
-note: owner_spell_total omitted because of collinearity
-note: owner_org omitted because of collinearity
 
-HDFE Linear regression                            Number of obs   =     10,608
-Absorbing 2 HDFE groups                           F(   6,    115) =       8.87
+HDFE Linear regression                            Number of obs   =     22,680
+Absorbing 2 HDFE groups                           F(   4,    237) =      13.95
 Statistics robust to heteroskedasticity           Prob > F        =     0.0000
-                                                  R-squared       =     0.3488
-                                                  Adj R-squared   =     0.3021
-                                                  Within R-sq.    =     0.0456
-Number of clusters (frame_id_numeric) =        116Root MSE        =     0.1915
+                                                  R-squared       =     0.3487
+                                                  Adj R-squared   =     0.3120
+                                                  Within R-sq.    =     0.0424
+Number of clusters (frame_id_numeric) =        238Root MSE        =     0.1594
 
-                     (Std. err. adjusted for 116 clusters in frame_id_numeric)
+                     (Std. err. adjusted for 238 clusters in frame_id_numeric)
 ------------------------------------------------------------------------------
              |               Robust
       import | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-     manager |   .2595139   .0634651     4.09   0.000     .1338018     .385226
-manager_c~ig |   .0309818   .0147576     2.10   0.038       .00175    .0602137
-manager_c~ng |   .0206452   .0250108     0.83   0.411    -.0288964    .0701868
-       owner |   .0850838   .0298743     2.85   0.005     .0259086     .144259
-owner_contig |  -.0097225   .0123227    -0.79   0.432    -.0341314    .0146863
-owner_coml~g |   .0084361   .0137881     0.61   0.542    -.0188755    .0357477
- owner_spell |          0  (omitted)
-owner_spe~al |          0  (omitted)
-   owner_org |          0  (omitted)
-       _cons |   .0450233   .0024395    18.46   0.000     .0401912    .0498554
+     manager |   .2486102   .0521284     4.77   0.000     .1459161    .3513043
+manager_co~g |   .0361212   .0206241     1.75   0.081    -.0045087    .0767512
+       owner |   .1125702    .031587     3.56   0.000      .050343    .1747973
+owner_coml~g |   .0108245   .0127673     0.85   0.397    -.0143274    .0359763
+       _cons |   .0321277   .0011984    26.81   0.000     .0297669    .0344885
 ------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
 -----------------------------------------------------------------+
              Absorbed FE | Categories  - Redundant  = Num. Coefs |
 -------------------------+---------------------------------------|
-   frame_id_numeric#year |       442         442           0    *|
+   frame_id_numeric#year |       945         945           0    *|
                  cc#year |       264           1         263     |
 -----------------------------------------------------------------+
 * = FE nested within cluster; treated as redundant for DoF computation

@@ -2,9 +2,8 @@ here
 local here = r(here)
 
 use "`here'/temp/analysis_sample_dyadic.dta"
-keep frame_id_numeric year country export import manager* owner* time_foreign teaor08_2d  
+keep frame_id_numeric year country export import manager manager_comlang owner owner_comlang time_foreign teaor08_2d  
 drop if country=="XX"
-drop *distance
 egen cc = group(country)
 
 egen byte acquired_in_sample = max(time_foreign == 0), by(frame_id_numeric )
