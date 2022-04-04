@@ -35,6 +35,14 @@ foreach lang in `languages' {
 	generate byte cnt_`lang' = (iso639 == "`lang'")
 }
 
+preserve
+
+*duplicates drop frame_id_numeric manager_id, force
+bys frame_id_numeric manager_id (year): gen manager_year = _n
+tab country_code if owner == 1 & manager_year == 1
+
+restore
+
 collapse (max) expat cnt_??, by(frame_id_numeric year country_code)
 drop expat
 
