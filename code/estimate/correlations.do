@@ -21,24 +21,13 @@ foreach X in export import {
     tabulate `X'_before `X'
     egen `X'_anywhere_before = max(`X'_before), by(frame_id_numeric)
 }
-foreach X in export import {
-    reghdfe `X' manager owner `X'_before if `timing', a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
-    reghdfe `X' manager owner if !`X'_before & `timing', a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
-    reghdfe `X' manager owner if !`X'_anywhere_before & `timing', a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
-}
 
-tabulate manager export if `timing', row
-tabulate manager export if !export_before & `timing', row
+rename manager ADDRESS
+rename language NATIONALITY
+generate byte LANGUAGE = NATIONALITY | manager_comlang 
 
 foreach X in export import {
-    reghdfe `X' manager* language owner*  `X'_before if `timing', a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
-    reghdfe `X' manager* language owner*  if !`X'_before & `timing', a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
-    reghdfe `X' manager* language owner*  if !`X'_anywhere_before & `timing', a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
+    reghdfe `X' ADDRESS NATIONALITY LANGUAGE `X'_before if `timing', a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
+    reghdfe `X' ADDRESS NATIONALITY LANGUAGE if !`X'_before & `timing', a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
+    reghdfe `X' ADDRESS NATIONALITY LANGUAGE if !`X'_anywhere_before & `timing', a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
 }
-
-* selection into expat management
-reghdfe owner export_before if `timing', a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
-reghdfe manager export_before if `timing', a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
-reghdfe manager owner export_before if `timing', a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
-reghdfe manager owner import_before if `timing', a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
-

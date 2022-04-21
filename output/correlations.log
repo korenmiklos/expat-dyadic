@@ -12,7 +12,7 @@ ___/   /   /___/   /   /___/       MP—Parallel Edition
 
 Stata license: Single-user 2-core  perpetual
 Serial number: 501706328764
-  Licensed to: Miklos Koren
+  Licensed to: Miklós Koren
                CEU MicroData
 
 Notes:
@@ -24,7 +24,7 @@ Notes:
 . do ../code/estimate/correlations.do 
 
 . here
-/Users/koren/Tresorit/projects/expat-dyadic/
+/Users/koren/Documents/research/expat-dyadic/
 
 . local here = r(here)
 
@@ -100,261 +100,42 @@ import_bef |     (max) import
 -----------+----------------------+----------
      Total |   121,278     15,354 |   136,632 
 
-. foreach X in export import {
-  2.     reghdfe `X' manager owner `X'_before if `timing', a(frame_id_numeric##
-> year cc##year) cluster(frame_id_numeric )
-  3.     reghdfe `X' manager owner if !`X'_before & `timing', a(frame_id_numeri
-> c##year cc##year) cluster(frame_id_numeric )
-  4.     reghdfe `X' manager owner if !`X'_anywhere_before & `timing', a(frame_
-> id_numeric##year cc##year) cluster(frame_id_numeric )
-  5. }
-(MWFE estimator converged in 2 iterations)
-
-HDFE Linear regression                            Number of obs   =     76,296
-Absorbing 2 HDFE groups                           F(   3,    728) =     141.20
-Statistics robust to heteroskedasticity           Prob > F        =     0.0000
-                                                  R-squared       =     0.4271
-                                                  Adj R-squared   =     0.4000
-                                                  Within R-sq.    =     0.0904
-Number of clusters (frame_id_numeric) =        729Root MSE        =     0.2153
-
-                     (Std. err. adjusted for 729 clusters in frame_id_numeric)
-------------------------------------------------------------------------------
-             |               Robust
-      export | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
--------------+----------------------------------------------------------------
-     manager |   .1163768    .027273     4.27   0.000     .0628337    .1699198
-       owner |   .1432432   .0188153     7.61   0.000     .1063044     .180182
-export_bef~e |   .2491834   .0153298    16.25   0.000     .2190875    .2792793
-       _cons |   .0525856   .0016676    31.53   0.000     .0493118    .0558594
-------------------------------------------------------------------------------
-
-Absorbed degrees of freedom:
------------------------------------------------------------------+
-             Absorbed FE | Categories  - Redundant  = Num. Coefs |
--------------------------+---------------------------------------|
-   frame_id_numeric#year |      3179        3179           0    *|
-                 cc#year |       264           1         263     |
------------------------------------------------------------------+
-* = FE nested within cluster; treated as redundant for DoF computation
-(dropped 13 singleton observations)
-(MWFE estimator converged in 5 iterations)
-
-HDFE Linear regression                            Number of obs   =     67,965
-Absorbing 2 HDFE groups                           F(   2,    722) =      18.35
-Statistics robust to heteroskedasticity           Prob > F        =     0.0000
-                                                  R-squared       =     0.2344
-                                                  Adj R-squared   =     0.1939
-                                                  Within R-sq.    =     0.0093
-Number of clusters (frame_id_numeric) =        723Root MSE        =     0.1731
-
-                     (Std. err. adjusted for 723 clusters in frame_id_numeric)
-------------------------------------------------------------------------------
-             |               Robust
-      export | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
--------------+----------------------------------------------------------------
-     manager |   .1035272   .0328888     3.15   0.002     .0389582    .1680963
-       owner |   .0874532   .0203235     4.30   0.000     .0475529    .1273535
-       _cons |   .0364219    .000371    98.17   0.000     .0356935    .0371503
-------------------------------------------------------------------------------
-
-Absorbed degrees of freedom:
------------------------------------------------------------------+
-             Absorbed FE | Categories  - Redundant  = Num. Coefs |
--------------------------+---------------------------------------|
-   frame_id_numeric#year |      3149        3149           0    *|
-                 cc#year |       264           1         263     |
------------------------------------------------------------------+
-* = FE nested within cluster; treated as redundant for DoF computation
-(MWFE estimator converged in 2 iterations)
-
-HDFE Linear regression                            Number of obs   =     34,776
-Absorbing 2 HDFE groups                           F(   2,    351) =      10.51
-Statistics robust to heteroskedasticity           Prob > F        =     0.0000
-                                                  R-squared       =     0.2419
-                                                  Adj R-squared   =     0.2026
-                                                  Within R-sq.    =     0.0176
-Number of clusters (frame_id_numeric) =        352Root MSE        =     0.1197
-
-                     (Std. err. adjusted for 352 clusters in frame_id_numeric)
-------------------------------------------------------------------------------
-             |               Robust
-      export | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
--------------+----------------------------------------------------------------
-     manager |   .0860192   .0337138     2.55   0.011     .0197129    .1523256
-       owner |   .0746909   .0228919     3.26   0.001     .0296682    .1197135
-       _cons |   .0159598   .0005142    31.04   0.000     .0149485     .016971
-------------------------------------------------------------------------------
-
-Absorbed degrees of freedom:
------------------------------------------------------------------+
-             Absorbed FE | Categories  - Redundant  = Num. Coefs |
--------------------------+---------------------------------------|
-   frame_id_numeric#year |      1449        1449           0    *|
-                 cc#year |       264           1         263     |
------------------------------------------------------------------+
-* = FE nested within cluster; treated as redundant for DoF computation
-(MWFE estimator converged in 2 iterations)
-
-HDFE Linear regression                            Number of obs   =     76,296
-Absorbing 2 HDFE groups                           F(   3,    728) =     322.33
-Statistics robust to heteroskedasticity           Prob > F        =     0.0000
-                                                  R-squared       =     0.4326
-                                                  Adj R-squared   =     0.4058
-                                                  Within R-sq.    =     0.1126
-Number of clusters (frame_id_numeric) =        729Root MSE        =     0.2592
-
-                     (Std. err. adjusted for 729 clusters in frame_id_numeric)
-------------------------------------------------------------------------------
-             |               Robust
-      import | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
--------------+----------------------------------------------------------------
-     manager |   .1826616   .0248711     7.34   0.000     .1338339    .2314892
-       owner |    .138855   .0175778     7.90   0.000     .1043457    .1733643
-import_bef~e |   .2923983   .0128576    22.74   0.000     .2671559    .3176406
-       _cons |   .0807179   .0018569    43.47   0.000     .0770723    .0843635
-------------------------------------------------------------------------------
-
-Absorbed degrees of freedom:
------------------------------------------------------------------+
-             Absorbed FE | Categories  - Redundant  = Num. Coefs |
--------------------------+---------------------------------------|
-   frame_id_numeric#year |      3179        3179           0    *|
-                 cc#year |       264           1         263     |
------------------------------------------------------------------+
-* = FE nested within cluster; treated as redundant for DoF computation
-(dropped 16 singleton observations)
-(MWFE estimator converged in 5 iterations)
-
-HDFE Linear regression                            Number of obs   =     64,834
-Absorbing 2 HDFE groups                           F(   2,    724) =      33.18
-Statistics robust to heteroskedasticity           Prob > F        =     0.0000
-                                                  R-squared       =     0.2679
-                                                  Adj R-squared   =     0.2271
-                                                  Within R-sq.    =     0.0110
-Number of clusters (frame_id_numeric) =        725Root MSE        =     0.2126
-
-                     (Std. err. adjusted for 725 clusters in frame_id_numeric)
-------------------------------------------------------------------------------
-             |               Robust
-      import | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
--------------+----------------------------------------------------------------
-     manager |    .232209   .0381203     6.09   0.000     .1573694    .3070485
-       owner |   .0751913   .0210169     3.58   0.000       .03393    .1164527
-       _cons |   .0600287   .0002972   202.01   0.000     .0594453    .0606121
-------------------------------------------------------------------------------
-
-Absorbed degrees of freedom:
------------------------------------------------------------------+
-             Absorbed FE | Categories  - Redundant  = Num. Coefs |
--------------------------+---------------------------------------|
-   frame_id_numeric#year |      3158        3158           0    *|
-                 cc#year |       264           1         263     |
------------------------------------------------------------------+
-* = FE nested within cluster; treated as redundant for DoF computation
-(MWFE estimator converged in 2 iterations)
-
-HDFE Linear regression                            Number of obs   =     22,680
-Absorbing 2 HDFE groups                           F(   2,    237) =      27.67
-Statistics robust to heteroskedasticity           Prob > F        =     0.0000
-                                                  R-squared       =     0.3476
-                                                  Adj R-squared   =     0.3108
-                                                  Within R-sq.    =     0.0408
-Number of clusters (frame_id_numeric) =        238Root MSE        =     0.1595
-
-                     (Std. err. adjusted for 238 clusters in frame_id_numeric)
-------------------------------------------------------------------------------
-             |               Robust
-      import | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
--------------+----------------------------------------------------------------
-     manager |   .2418064   .0507659     4.76   0.000     .1417964    .3418165
-       owner |   .1097679   .0309542     3.55   0.000     .0487873    .1707485
-       _cons |   .0338908   .0006145    55.15   0.000     .0326803    .0351014
-------------------------------------------------------------------------------
-
-Absorbed degrees of freedom:
------------------------------------------------------------------+
-             Absorbed FE | Categories  - Redundant  = Num. Coefs |
--------------------------+---------------------------------------|
-   frame_id_numeric#year |       945         945           0    *|
-                 cc#year |       264           1         263     |
------------------------------------------------------------------+
-* = FE nested within cluster; treated as redundant for DoF computation
-
 . 
-. tabulate manager export if `timing', row
+. rename manager ADDRESS
 
-+----------------+
-| Key            |
-|----------------|
-|   frequency    |
-| row percentage |
-+----------------+
+. rename language NATIONALITY
 
-           |     (max) export
-   manager |         0          1 |     Total
------------+----------------------+----------
-         0 |    69,281      6,023 |    75,304 
-           |     92.00       8.00 |    100.00 
------------+----------------------+----------
-         1 |       579        413 |       992 
-           |     58.37      41.63 |    100.00 
------------+----------------------+----------
-     Total |    69,860      6,436 |    76,296 
-           |     91.56       8.44 |    100.00 
-
-. tabulate manager export if !export_before & `timing', row
-
-+----------------+
-| Key            |
-|----------------|
-|   frequency    |
-| row percentage |
-+----------------+
-
-           |     (max) export
-   manager |         0          1 |     Total
------------+----------------------+----------
-         0 |    64,897      2,500 |    67,397 
-           |     96.29       3.71 |    100.00 
------------+----------------------+----------
-         1 |       451        130 |       581 
-           |     77.62      22.38 |    100.00 
------------+----------------------+----------
-     Total |    65,348      2,630 |    67,978 
-           |     96.13       3.87 |    100.00 
+. generate byte LANGUAGE = NATIONALITY | manager_comlang 
 
 . 
 . foreach X in export import {
-  2.     reghdfe `X' manager* language owner*  `X'_before if `timing', a(frame_
-> id_numeric##year cc##year) cluster(frame_id_numeric )
-  3.     reghdfe `X' manager* language owner*  if !`X'_before & `timing', a(fra
+  2.     reghdfe `X' ADDRESS NATIONALITY LANGUAGE `X'_before if `timing', a(fra
 > me_id_numeric##year cc##year) cluster(frame_id_numeric )
-  4.     reghdfe `X' manager* language owner*  if !`X'_anywhere_before & `timin
-> g', a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
+  3.     reghdfe `X' ADDRESS NATIONALITY LANGUAGE if !`X'_before & `timing', a(
+> frame_id_numeric##year cc##year) cluster(frame_id_numeric )
+  4.     reghdfe `X' ADDRESS NATIONALITY LANGUAGE if !`X'_anywhere_before & `ti
+> ming', a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
   5. }
 (MWFE estimator converged in 2 iterations)
 
 HDFE Linear regression                            Number of obs   =     76,296
-Absorbing 2 HDFE groups                           F(   6,    728) =      71.11
+Absorbing 2 HDFE groups                           F(   4,    728) =      89.83
 Statistics robust to heteroskedasticity           Prob > F        =     0.0000
-                                                  R-squared       =     0.4274
-                                                  Adj R-squared   =     0.4003
-                                                  Within R-sq.    =     0.0909
-Number of clusters (frame_id_numeric) =        729Root MSE        =     0.2152
+                                                  R-squared       =     0.4232
+                                                  Adj R-squared   =     0.3959
+                                                  Within R-sq.    =     0.0842
+Number of clusters (frame_id_numeric) =        729Root MSE        =     0.2160
 
                      (Std. err. adjusted for 729 clusters in frame_id_numeric)
 ------------------------------------------------------------------------------
              |               Robust
       export | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-     manager |    .095753   .0271781     3.52   0.000     .0423963    .1491097
-manager_co~g |    -.02916   .0133971    -2.18   0.030    -.0554615   -.0028584
-    language |   .0332765   .0194165     1.71   0.087    -.0048426    .0713955
-       owner |   .1435777   .0192696     7.45   0.000     .1057471    .1814084
-owner_coml~g |   .0139367   .0093053     1.50   0.135    -.0043317    .0322051
-export_bef~e |   .2493899   .0153777    16.22   0.000        .2192    .2795799
-       _cons |   .0522929   .0017413    30.03   0.000     .0488745    .0557114
+     ADDRESS |   .1775574   .0255997     6.94   0.000     .1272992    .2278155
+ NATIONALITY |   .0404302    .020437     1.98   0.048     .0003077    .0805527
+    LANGUAGE |  -.0187203   .0122686    -1.53   0.127    -.0428065    .0053658
+export_bef~e |    .253505   .0154138    16.45   0.000     .2232442    .2837658
+       _cons |   .0543123   .0016959    32.02   0.000     .0509828    .0576418
 ------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
@@ -362,31 +143,29 @@ Absorbed degrees of freedom:
              Absorbed FE | Categories  - Redundant  = Num. Coefs |
 -------------------------+---------------------------------------|
    frame_id_numeric#year |      3179        3179           0    *|
-                 cc#year |       264           1         263     |
+                 cc#year |       264           0         264     |
 -----------------------------------------------------------------+
 * = FE nested within cluster; treated as redundant for DoF computation
 (dropped 13 singleton observations)
 (MWFE estimator converged in 5 iterations)
 
 HDFE Linear regression                            Number of obs   =     67,965
-Absorbing 2 HDFE groups                           F(   5,    722) =       8.43
+Absorbing 2 HDFE groups                           F(   3,    722) =       8.69
 Statistics robust to heteroskedasticity           Prob > F        =     0.0000
-                                                  R-squared       =     0.2350
-                                                  Adj R-squared   =     0.1945
-                                                  Within R-sq.    =     0.0101
-Number of clusters (frame_id_numeric) =        723Root MSE        =     0.1730
+                                                  R-squared       =     0.2324
+                                                  Adj R-squared   =     0.1918
+                                                  Within R-sq.    =     0.0066
+Number of clusters (frame_id_numeric) =        723Root MSE        =     0.1733
 
                      (Std. err. adjusted for 723 clusters in frame_id_numeric)
 ------------------------------------------------------------------------------
              |               Robust
       export | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-     manager |   .0864812   .0305254     2.83   0.005      .026552    .1464104
-manager_co~g |  -.0315444     .01199    -2.63   0.009    -.0550839    -.008005
-    language |   .0257973   .0177816     1.45   0.147    -.0091126    .0607072
-       owner |    .089239   .0206521     4.32   0.000     .0486937    .1297842
-owner_coml~g |    .019154   .0084694     2.26   0.024     .0025265    .0357816
-       _cons |   .0360321   .0006429    56.04   0.000     .0347699    .0372944
+     ADDRESS |   .1421534   .0308195     4.61   0.000     .0816468    .2026601
+ NATIONALITY |   .0366469   .0176279     2.08   0.038     .0020388    .0712551
+    LANGUAGE |  -.0245274   .0109765    -2.23   0.026    -.0460771   -.0029777
+       _cons |   .0377472   .0004903    76.99   0.000     .0367847    .0387098
 ------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
@@ -394,30 +173,28 @@ Absorbed degrees of freedom:
              Absorbed FE | Categories  - Redundant  = Num. Coefs |
 -------------------------+---------------------------------------|
    frame_id_numeric#year |      3149        3149           0    *|
-                 cc#year |       264           1         263     |
+                 cc#year |       264           0         264     |
 -----------------------------------------------------------------+
 * = FE nested within cluster; treated as redundant for DoF computation
 (MWFE estimator converged in 2 iterations)
 
 HDFE Linear regression                            Number of obs   =     34,776
-Absorbing 2 HDFE groups                           F(   5,    351) =       5.87
-Statistics robust to heteroskedasticity           Prob > F        =     0.0000
-                                                  R-squared       =     0.2423
-                                                  Adj R-squared   =     0.2030
-                                                  Within R-sq.    =     0.0182
-Number of clusters (frame_id_numeric) =        352Root MSE        =     0.1197
+Absorbing 2 HDFE groups                           F(   3,    351) =       7.36
+Statistics robust to heteroskedasticity           Prob > F        =     0.0001
+                                                  R-squared       =     0.2383
+                                                  Adj R-squared   =     0.1988
+                                                  Within R-sq.    =     0.0129
+Number of clusters (frame_id_numeric) =        352Root MSE        =     0.1200
 
                      (Std. err. adjusted for 352 clusters in frame_id_numeric)
 ------------------------------------------------------------------------------
              |               Robust
       export | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-     manager |   .0892993   .0342555     2.61   0.010     .0219276    .1566711
-manager_co~g |  -.0161888   .0157486    -1.03   0.305    -.0471624    .0147847
-    language |  -.0096971    .017836    -0.54   0.587    -.0447759    .0253817
-       owner |   .0760716    .022901     3.32   0.001     .0310311    .1211121
-owner_coml~g |   .0089035   .0067247     1.32   0.186    -.0043222    .0221293
-       _cons |   .0160962   .0007446    21.62   0.000     .0146317    .0175606
+     ADDRESS |   .1399406   .0330642     4.23   0.000     .0749117    .2049695
+ NATIONALITY |  -.0000594   .0168974    -0.00   0.997    -.0332923    .0331735
+    LANGUAGE |  -.0170339   .0155688    -1.09   0.275    -.0476538    .0135861
+       _cons |   .0174407   .0006535    26.69   0.000     .0161555    .0187259
 ------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
@@ -425,31 +202,29 @@ Absorbed degrees of freedom:
              Absorbed FE | Categories  - Redundant  = Num. Coefs |
 -------------------------+---------------------------------------|
    frame_id_numeric#year |      1449        1449           0    *|
-                 cc#year |       264           1         263     |
+                 cc#year |       264           0         264     |
 -----------------------------------------------------------------+
 * = FE nested within cluster; treated as redundant for DoF computation
 (MWFE estimator converged in 2 iterations)
 
 HDFE Linear regression                            Number of obs   =     76,296
-Absorbing 2 HDFE groups                           F(   6,    728) =     167.34
+Absorbing 2 HDFE groups                           F(   4,    728) =     215.89
 Statistics robust to heteroskedasticity           Prob > F        =     0.0000
-                                                  R-squared       =     0.4338
-                                                  Adj R-squared   =     0.4070
-                                                  Within R-sq.    =     0.1143
-Number of clusters (frame_id_numeric) =        729Root MSE        =     0.2589
+                                                  R-squared       =     0.4312
+                                                  Adj R-squared   =     0.4043
+                                                  Within R-sq.    =     0.1103
+Number of clusters (frame_id_numeric) =        729Root MSE        =     0.2595
 
                      (Std. err. adjusted for 729 clusters in frame_id_numeric)
 ------------------------------------------------------------------------------
              |               Robust
       import | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-     manager |   .1428294   .0288246     4.96   0.000     .0862401    .1994188
-manager_co~g |   .0111954   .0142712     0.78   0.433    -.0168223    .0392131
-    language |   .0801123   .0232847     3.44   0.001     .0343991    .1258254
-       owner |   .1381316    .017687     7.81   0.000     .1034079    .1728553
-owner_coml~g |   .0051262   .0098768     0.52   0.604    -.0142641    .0245166
-import_bef~e |   .2920764   .0128376    22.75   0.000     .2668733    .3172796
-       _cons |   .0786567   .0019795    39.74   0.000     .0747705    .0825428
+     ADDRESS |   .2059885   .0251448     8.19   0.000     .1566235    .2553535
+ NATIONALITY |   .0835235   .0247135     3.38   0.001     .0350053    .1320417
+    LANGUAGE |   .0096579   .0138275     0.70   0.485    -.0174887    .0368045
+import_bef~e |   .2959268   .0127825    23.15   0.000     .2708318    .3210219
+       _cons |   .0804109   .0019262    41.75   0.000     .0766293    .0841924
 ------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
@@ -457,31 +232,29 @@ Absorbed degrees of freedom:
              Absorbed FE | Categories  - Redundant  = Num. Coefs |
 -------------------------+---------------------------------------|
    frame_id_numeric#year |      3179        3179           0    *|
-                 cc#year |       264           1         263     |
+                 cc#year |       264           0         264     |
 -----------------------------------------------------------------+
 * = FE nested within cluster; treated as redundant for DoF computation
 (dropped 16 singleton observations)
-(MWFE estimator converged in 6 iterations)
+(MWFE estimator converged in 5 iterations)
 
 HDFE Linear regression                            Number of obs   =     64,834
-Absorbing 2 HDFE groups                           F(   5,    724) =      16.12
+Absorbing 2 HDFE groups                           F(   3,    724) =      23.48
 Statistics robust to heteroskedasticity           Prob > F        =     0.0000
-                                                  R-squared       =     0.2698
-                                                  Adj R-squared   =     0.2291
-                                                  Within R-sq.    =     0.0136
-Number of clusters (frame_id_numeric) =        725Root MSE        =     0.2124
+                                                  R-squared       =     0.2689
+                                                  Adj R-squared   =     0.2281
+                                                  Within R-sq.    =     0.0124
+Number of clusters (frame_id_numeric) =        725Root MSE        =     0.2125
 
                      (Std. err. adjusted for 725 clusters in frame_id_numeric)
 ------------------------------------------------------------------------------
              |               Robust
       import | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-     manager |   .1872058   .0418332     4.48   0.000      .105077    .2693346
-manager_co~g |   .0082026   .0134368     0.61   0.542     -.018177    .0345823
-    language |    .087475   .0246437     3.55   0.000     .0390933    .1358567
-       owner |   .0746769   .0211299     3.53   0.000     .0331938      .11616
-owner_coml~g |   .0036031   .0097653     0.37   0.712    -.0155686    .0227748
-       _cons |   .0583455   .0007293    80.00   0.000     .0569137    .0597773
+     ADDRESS |   .2197841   .0383824     5.73   0.000       .14443    .2951382
+ NATIONALITY |   .0906202   .0255295     3.55   0.000     .0404995     .140741
+    LANGUAGE |   .0052356   .0122414     0.43   0.669    -.0187973    .0292684
+       _cons |   .0592332   .0005493   107.83   0.000     .0581547    .0603116
 ------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
@@ -489,30 +262,28 @@ Absorbed degrees of freedom:
              Absorbed FE | Categories  - Redundant  = Num. Coefs |
 -------------------------+---------------------------------------|
    frame_id_numeric#year |      3158        3158           0    *|
-                 cc#year |       264           1         263     |
+                 cc#year |       264           0         264     |
 -----------------------------------------------------------------+
 * = FE nested within cluster; treated as redundant for DoF computation
 (MWFE estimator converged in 2 iterations)
 
 HDFE Linear regression                            Number of obs   =     22,680
-Absorbing 2 HDFE groups                           F(   5,    237) =      12.70
+Absorbing 2 HDFE groups                           F(   3,    237) =      15.25
 Statistics robust to heteroskedasticity           Prob > F        =     0.0000
-                                                  R-squared       =     0.3506
-                                                  Adj R-squared   =     0.3139
-                                                  Within R-sq.    =     0.0452
-Number of clusters (frame_id_numeric) =        238Root MSE        =     0.1592
+                                                  R-squared       =     0.3464
+                                                  Adj R-squared   =     0.3095
+                                                  Within R-sq.    =     0.0390
+Number of clusters (frame_id_numeric) =        238Root MSE        =     0.1597
 
                      (Std. err. adjusted for 238 clusters in frame_id_numeric)
 ------------------------------------------------------------------------------
              |               Robust
       import | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-     manager |   .1957776   .0550397     3.56   0.000      .087348    .3042071
-manager_co~g |   .0041355   .0199484     0.21   0.836    -.0351633    .0434344
-    language |   .0884943    .035725     2.48   0.014     .0181153    .1588734
-       owner |   .1101725   .0311358     3.54   0.000     .0488343    .1715108
-owner_coml~g |   .0094062   .0125262     0.75   0.453    -.0152708    .0340831
-       _cons |   .0320899   .0011562    27.76   0.000     .0298122    .0343675
+     ADDRESS |   .2527755   .0482004     5.24   0.000     .1578196    .3477314
+ NATIONALITY |   .0831169   .0355876     2.34   0.020     .0130084    .1532253
+    LANGUAGE |   .0149799   .0172685     0.87   0.387    -.0190395    .0489992
+       _cons |     .03366   .0009282    36.26   0.000     .0318315    .0354885
 ------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
@@ -520,134 +291,9 @@ Absorbed degrees of freedom:
              Absorbed FE | Categories  - Redundant  = Num. Coefs |
 -------------------------+---------------------------------------|
    frame_id_numeric#year |       945         945           0    *|
-                 cc#year |       264           1         263     |
+                 cc#year |       264           0         264     |
 -----------------------------------------------------------------+
 * = FE nested within cluster; treated as redundant for DoF computation
 
-. 
-. * selection into expat management
-. reghdfe owner export_before if `timing', a(frame_id_numeric##year cc##year) c
-> luster(frame_id_numeric )
-(MWFE estimator converged in 2 iterations)
-
-HDFE Linear regression                            Number of obs   =     76,296
-Absorbing 2 HDFE groups                           F(   1,    728) =      31.13
-Statistics robust to heteroskedasticity           Prob > F        =     0.0000
-                                                  R-squared       =     0.1259
-                                                  Adj R-squared   =     0.0846
-                                                  Within R-sq.    =     0.0086
-Number of clusters (frame_id_numeric) =        729Root MSE        =     0.1390
-
-                     (Std. err. adjusted for 729 clusters in frame_id_numeric)
-------------------------------------------------------------------------------
-             |               Robust
-       owner | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
--------------+----------------------------------------------------------------
-export_bef~e |   .0547283   .0098086     5.58   0.000     .0354719    .0739848
-       _cons |   .0156072   .0010694    14.59   0.000     .0135078    .0177066
-------------------------------------------------------------------------------
-
-Absorbed degrees of freedom:
------------------------------------------------------------------+
-             Absorbed FE | Categories  - Redundant  = Num. Coefs |
--------------------------+---------------------------------------|
-   frame_id_numeric#year |      3179        3179           0    *|
-                 cc#year |       264           1         263     |
------------------------------------------------------------------+
-* = FE nested within cluster; treated as redundant for DoF computation
-
-. reghdfe manager export_before if `timing', a(frame_id_numeric##year cc##year)
->  cluster(frame_id_numeric )
-(MWFE estimator converged in 2 iterations)
-
-HDFE Linear regression                            Number of obs   =     76,296
-Absorbing 2 HDFE groups                           F(   1,    728) =      28.63
-Statistics robust to heteroskedasticity           Prob > F        =     0.0000
-                                                  R-squared       =     0.0969
-                                                  Adj R-squared   =     0.0543
-                                                  Within R-sq.    =     0.0096
-Number of clusters (frame_id_numeric) =        729Root MSE        =     0.1102
-
-                     (Std. err. adjusted for 729 clusters in frame_id_numeric)
-------------------------------------------------------------------------------
-             |               Robust
-     manager | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
--------------+----------------------------------------------------------------
-export_bef~e |   .0459706    .008591     5.35   0.000     .0291045    .0628367
-       _cons |   .0079901   .0009366     8.53   0.000     .0061514    .0098289
-------------------------------------------------------------------------------
-
-Absorbed degrees of freedom:
------------------------------------------------------------------+
-             Absorbed FE | Categories  - Redundant  = Num. Coefs |
--------------------------+---------------------------------------|
-   frame_id_numeric#year |      3179        3179           0    *|
-                 cc#year |       264           1         263     |
------------------------------------------------------------------+
-* = FE nested within cluster; treated as redundant for DoF computation
-
-. reghdfe manager owner export_before if `timing', a(frame_id_numeric##year cc#
-> #year) cluster(frame_id_numeric )
-(MWFE estimator converged in 2 iterations)
-
-HDFE Linear regression                            Number of obs   =     76,296
-Absorbing 2 HDFE groups                           F(   2,    728) =      87.45
-Statistics robust to heteroskedasticity           Prob > F        =     0.0000
-                                                  R-squared       =     0.2497
-                                                  Adj R-squared   =     0.2143
-                                                  Within R-sq.    =     0.1772
-Number of clusters (frame_id_numeric) =        729Root MSE        =     0.1004
-
-                     (Std. err. adjusted for 729 clusters in frame_id_numeric)
-------------------------------------------------------------------------------
-             |               Robust
-     manager | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
--------------+----------------------------------------------------------------
-       owner |   .3259871   .0256306    12.72   0.000     .2756684    .3763057
-export_bef~e |   .0281299   .0071515     3.93   0.000     .0140898      .04217
-       _cons |   .0029024   .0009668     3.00   0.003     .0010043    .0048005
-------------------------------------------------------------------------------
-
-Absorbed degrees of freedom:
------------------------------------------------------------------+
-             Absorbed FE | Categories  - Redundant  = Num. Coefs |
--------------------------+---------------------------------------|
-   frame_id_numeric#year |      3179        3179           0    *|
-                 cc#year |       264           1         263     |
------------------------------------------------------------------+
-* = FE nested within cluster; treated as redundant for DoF computation
-
-. reghdfe manager owner import_before if `timing', a(frame_id_numeric##year cc#
-> #year) cluster(frame_id_numeric )
-(MWFE estimator converged in 2 iterations)
-
-HDFE Linear regression                            Number of obs   =     76,296
-Absorbing 2 HDFE groups                           F(   2,    728) =      90.53
-Statistics robust to heteroskedasticity           Prob > F        =     0.0000
-                                                  R-squared       =     0.2493
-                                                  Adj R-squared   =     0.2138
-                                                  Within R-sq.    =     0.1767
-Number of clusters (frame_id_numeric) =        729Root MSE        =     0.1004
-
-                     (Std. err. adjusted for 729 clusters in frame_id_numeric)
-------------------------------------------------------------------------------
-             |               Robust
-     manager | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
--------------+----------------------------------------------------------------
-       owner |   .3261465    .025637    12.72   0.000     .2758153    .3764777
-import_bef~e |   .0220283   .0048813     4.51   0.000     .0124452    .0316113
-       _cons |    .002661   .0009222     2.89   0.004     .0008506    .0044715
-------------------------------------------------------------------------------
-
-Absorbed degrees of freedom:
------------------------------------------------------------------+
-             Absorbed FE | Categories  - Redundant  = Num. Coefs |
--------------------------+---------------------------------------|
-   frame_id_numeric#year |      3179        3179           0    *|
-                 cc#year |       264           1         263     |
------------------------------------------------------------------+
-* = FE nested within cluster; treated as redundant for DoF computation
-
-. 
 . 
 end of do-file
