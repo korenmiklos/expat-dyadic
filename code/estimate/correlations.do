@@ -25,9 +25,18 @@ foreach X in export import {
 rename manager ADDRESS
 rename language NATIONALITY
 generate byte LANGUAGE = NATIONALITY | manager_comlang 
+rename owner ADDRESS_o
+rename owner_comlang LANGUAGE_o 
 
+local options tex(frag) dec(3)  nocons nonotes addstat(Mean, r(mean)) addtext(Firm-year FE, YES, Country-year FE, YES)
+
+local fmode replace
 foreach X in export import {
-    reghdfe `X' ADDRESS NATIONALITY LANGUAGE `X'_before if `timing', a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
     reghdfe `X' ADDRESS NATIONALITY LANGUAGE if !`X'_before & `timing', a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
-    reghdfe `X' ADDRESS NATIONALITY LANGUAGE if !`X'_anywhere_before & `timing', a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
+    summarize `X' if e(sample)
+	outreg2 using "`here'/output/table/correlations.tex", `fmode' `options' ctitle(`X')
+	local fmode append
+    reghdfe `X' ADDRESS NATIONALITY LANGUAGE ADDRESS_o LANGUAGE_o if !`X'_before & `timing', a(frame_id_numeric##year cc##year) cluster(frame_id_numeric )
+    summarize `X' if e(sample)
+	outreg2 using "`here'/output/table/correlations.tex", `fmode' `options' ctitle(`X')
 }
